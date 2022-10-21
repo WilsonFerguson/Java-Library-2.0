@@ -25,7 +25,7 @@ class Main extends Applet {
         // translate(x, 100);
         // rotate(x);
         rectMode(CORNER);
-        rect(x, 100, 100, 100, 20); // 0, 0
+        rect(1200, 100, 100, 100, 20); // 0, 0
 
     
         // translate(0, 0);

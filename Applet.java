@@ -102,7 +102,7 @@ public class Applet extends JPanel {
         frame.getContentPane().add(this);
         frame.pack(); // If you pack, the size will become around 1200
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         frame.setVisible(true);
 
         g = frame.getGraphics();
@@ -121,6 +121,8 @@ public class Applet extends JPanel {
         size(width, height);
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        println(getSize(), frame.getSize());
     }
 
     private void addListeners() {
@@ -739,7 +741,8 @@ public class Applet extends JPanel {
         g2d = (Graphics2D) g;
         this.g = g;
 
-        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        // RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (drawBackground) {
             Color prevColor = g2d.getColor();
