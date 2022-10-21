@@ -1,12 +1,10 @@
 import java.awt.Color;
 
-public class LineApplet {
+public class LineApplet extends AppletComponent {
 
     public double x1, y1, x2, y2;
     public Color color;
     public double strokeWeight;
-    public double rotate, scale;
-    public Point translate;
 
     public LineApplet(double x1, double y1, double x2, double y2, Color color, double strokeWeight, double rotate,
             Point translate, double scale) {

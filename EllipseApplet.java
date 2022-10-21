@@ -1,14 +1,12 @@
 import java.awt.Color;
 
-public class EllipseApplet {
+public class EllipseApplet extends AppletComponent {
 
     public double x, y, w, h;
     public Color strokeColor;
     public Color fillColor;
     public int alignment;
     public double strokeWeight;
-    public double rotate, scale;
-    public Point translate;
 
     public EllipseApplet(double x, double y, double w, double h, Color strokeColor, Color fillColor, int alignment,
             double strokeWeight, double rotate, Point translate, double scale) {

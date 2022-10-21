@@ -30,11 +30,8 @@ class Main extends Applet {
 
         // translate(0, 0);
         // rotate(0);
-        // fill(Color.green);
-        // textSize(24);
-        // textAlign(CENTER);
-        // text(x, mouseX, mouseY);
         strokeWeight(10);
+        stroke(Color.blue);
         point(mouseX, mouseY);
 
         stroke(255);

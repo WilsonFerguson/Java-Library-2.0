@@ -18,30 +18,30 @@ import java.nio.file.Paths;
 
 public class Applet extends JPanel {
 
-    public JFrame frame;
-    public Graphics g;
-    public Graphics2D g2d;
+    private JFrame frame;
+    private Graphics g;
+    private Graphics2D g2d;
 
     public final int CENTER = 0;
     public final int CORNER = 1;
     public final int LEFT = 1;
     public final int RIGHT = 3;
 
-    public int rectMode = CORNER;
-    public int ellipseMode = CORNER;
-    public int textAlign = LEFT;
+    private int rectMode = CORNER;
+    private int ellipseMode = CORNER;
+    private int textAlign = LEFT;
 
-    public Color fillColor = Color.BLACK;
-    public Color strokeColor = Color.BLACK;
-    public Color backgroundColor = Color.WHITE;
+    private Color fillColor = Color.BLACK;
+    private Color strokeColor = Color.BLACK;
+    private Color backgroundColor = Color.WHITE;
 
-    public double strokeWeight = 1;
-    public double textSize = 12;
-    public String textFont = "Arial";
+    private double strokeWeight = 1;
+    private double textSize = 12;
+    private String textFont = "Arial";
 
-    public double rotation = 0;
-    public Point translation = Point.zero();
-    public double scale = 1;
+    private double rotation = 0;
+    private Point translation = Point.zero();
+    private double scale = 1;
 
     public double mouseX = 0;
     public double mouseY = 0;
@@ -50,13 +50,11 @@ public class Applet extends JPanel {
     public double pmouseY = 0;
     public Point pmouse = Point.zero();
 
-    public double startTime = 0;
-
     public int width;
     public int height;
     public int displayWidth;
     public int displayHeight;
-    public double universalScale = 1;
+    private double universalScale = 1;
 
     public boolean mousePressed = false;
     public int mouseButton = CENTER;
@@ -64,14 +62,8 @@ public class Applet extends JPanel {
     public int keyCode = 0;
 
     // Drawing
-    public ArrayList<EllipseApplet> ellipses = new ArrayList<EllipseApplet>();
-    public ArrayList<LineApplet> lines = new ArrayList<LineApplet>();
-    public ArrayList<QuadApplet> quads = new ArrayList<QuadApplet>();
-    public ArrayList<RectApplet> rects = new ArrayList<RectApplet>();
-    public ArrayList<TriangleApplet> triangles = new ArrayList<TriangleApplet>();
-    public ArrayList<TextApplet> texts = new ArrayList<TextApplet>();
-    public ArrayList<ShapeApplet> shapes = new ArrayList<ShapeApplet>();
-    public boolean drawBackground = false;
+    private ArrayList<AppletComponent> components = new ArrayList<AppletComponent>();
+    private boolean drawBackground = false;
 
     // Constants
     public final double PI = Math.PI;
@@ -81,18 +73,19 @@ public class Applet extends JPanel {
     public final double TAU = Math.PI * 2;
 
     // Shape
-    public ShapeApplet shape;
+    private ShapeApplet shape;
     public final int SMOOTH = 1;
     public final int RIGID = 2;
     public final int CLOSE = 0;
 
     // FPS
-    public double targetFrameRate = 60;
-    public ArrayList<Double> frameRates = new ArrayList<Double>();
+    private double targetFrameRate = 60;
+    private ArrayList<Double> frameRates = new ArrayList<Double>();
     public double frameRate = 0;
-    public double lastTime = 0;
+    private double lastTime = 0;
     public int frameCount = 0;
-    public boolean displayFrameRate = false;
+    private boolean displayFrameRate = false;
+    private double startTime = 0;
 
     public void size(double width, double height) {
         if (displayWidth == 0) {
@@ -486,8 +479,7 @@ public class Applet extends JPanel {
         EllipseApplet ellipse = new EllipseApplet(x, y, w, h, strokeColor, fillColor, ellipseMode, strokeWeight,
                 rotation,
                 translation, scale);
-        ellipses.add(ellipse);
-
+        components.add(ellipse);
     }
 
     public void ellipse(Point p, double w, double h) {
@@ -525,7 +517,7 @@ public class Applet extends JPanel {
 
     public void line(double x1, double y1, double x2, double y2) {
         LineApplet line = new LineApplet(x1, y1, x2, y2, strokeColor, strokeWeight, rotation, translation, scale);
-        lines.add(line);
+        components.add(line);
     }
 
     public void line(Point p1, Point p2) {
@@ -570,7 +562,7 @@ public class Applet extends JPanel {
     public void quad(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
         QuadApplet quad = new QuadApplet(x1, y1, x2, y2, x3, y3, x4, y4, strokeColor, fillColor, strokeWeight, rotation,
                 translation, scale);
-        quads.add(quad);
+        components.add(quad);
     }
 
     public void quad(Point p1, Point p2, Point p3, Point p4) {
@@ -605,13 +597,13 @@ public class Applet extends JPanel {
     public void rect(double x, double y, double w, double h, double r) {
         RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, r, rotation,
                 translation, scale);
-        rects.add(rect);
+        components.add(rect);
     }
 
     public void rect(double x, double y, double w, double h) {
         RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, 1, rotation,
                 translation, scale);
-        rects.add(rect);
+        components.add(rect);
     }
 
     public void rect(Point p, double w, double h, double r) {
@@ -666,7 +658,7 @@ public class Applet extends JPanel {
     public void triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
         TriangleApplet triangle = new TriangleApplet(x1, y1, x2, y2, x3, y3, strokeColor, fillColor, strokeWeight,
                 rotation, translation, scale);
-        triangles.add(triangle);
+        components.add(triangle);
     }
 
     public void triangle(Point p1, Point p2, Point p3) {
@@ -700,7 +692,7 @@ public class Applet extends JPanel {
     public void text(String text, double x, double y) {
         TextApplet textApplet = new TextApplet(text, x, y, fillColor, textSize, textAlign, textFont, rotation,
                 translation, scale);
-        texts.add(textApplet);
+        components.add(textApplet);
     }
 
     public void text(Object text, double x, double y) {
@@ -770,7 +762,7 @@ public class Applet extends JPanel {
     }
 
     public void endShape() {
-        shapes.add(shape);
+        components.add(shape);
         shape = null;
     }
 
@@ -790,6 +782,24 @@ public class Applet extends JPanel {
         vertex(p.x, p.y);
     }
 
+    private void drawSpecificShape(AppletComponent component) {
+        if (component instanceof EllipseApplet) {
+            drawEllipse((EllipseApplet) component);
+        } else if (component instanceof LineApplet) {
+            drawLine((LineApplet) component);
+        } else if (component instanceof QuadApplet) {
+            drawQuad((QuadApplet) component);
+        } else if (component instanceof RectApplet) {
+            drawRect((RectApplet) component);
+        } else if (component instanceof TriangleApplet) {
+            drawTriangle((TriangleApplet) component);
+        } else if (component instanceof TextApplet) {
+            drawText((TextApplet) component);
+        } else if (component instanceof ShapeApplet) {
+            drawShape((ShapeApplet) component);
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -807,6 +817,11 @@ public class Applet extends JPanel {
             g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
         }
+        for (AppletComponent component : components) {
+            drawSpecificShape(component);
+        }
+        components.clear();
+
         if (displayFrameRate) {
             Color prevColor = g2d.getColor();
 
@@ -822,34 +837,6 @@ public class Applet extends JPanel {
 
             g2d.setColor(prevColor);
         }
-        for (EllipseApplet e : ellipses) {
-            drawEllipse(e);
-        }
-        for (LineApplet l : lines) {
-            drawLine(l);
-        }
-        for (QuadApplet q : quads) {
-            drawQuad(q);
-        }
-        for (RectApplet r : rects) {
-            drawRect(r);
-        }
-        for (TriangleApplet t : triangles) {
-            drawTriangle(t);
-        }
-        for (TextApplet t : texts) {
-            drawText(t);
-        }
-        for (ShapeApplet s : shapes) {
-            drawShape(s);
-        }
-        ellipses.clear();
-        lines.clear();
-        quads.clear();
-        rects.clear();
-        triangles.clear();
-        texts.clear();
-        shapes.clear();
     }
 
     public void delay(int millis) {
