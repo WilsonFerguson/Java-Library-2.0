@@ -11,6 +11,7 @@ class Main extends Applet {
 
     public void setup() {
         size(1920, 1080);
+        frameRate(60);
     }
 
     public void draw() {
@@ -24,7 +25,7 @@ class Main extends Applet {
         // translate(x, 100);
         // rotate(x);
         rectMode(CORNER);
-        rect(x, 100, 100, 100); // 0, 0
+        rect(x, 100, 100, 100, 20); // 0, 0
 
         // translate(0, 0);
         // rotate(0);

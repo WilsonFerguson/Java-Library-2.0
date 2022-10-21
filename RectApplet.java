@@ -9,9 +9,10 @@ public class RectApplet {
     public double strokeWeight;
     public double rotate, scale;
     public Point translate;
+    public double roundness;
 
     public RectApplet(double x, double y, double w, double h, Color strokeColor, Color fillColor, int alignment,
-            double strokeWeight, double rotate, Point translate, double scale) {
+            double strokeWeight, double roundness, double rotate, Point translate, double scale) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -20,6 +21,7 @@ public class RectApplet {
         this.fillColor = fillColor;
         this.alignment = alignment;
         this.strokeWeight = strokeWeight;
+        this.roundness = roundness;
         this.rotate = rotate;
         this.translate = translate;
         this.scale = scale;

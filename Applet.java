@@ -89,6 +89,8 @@ public class Applet extends JPanel {
     public final int CLOSE = 0;
 
     public void size(double width, double height) {
+        setDoubleBuffered(true);
+
         frame = new JFrame();
         frame.setSize((int) width, (int) height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -522,21 +524,35 @@ public class Applet extends JPanel {
 
         // Fill
         g2d.setColor(rect.fillColor);
-        g2d.fill(new Rectangle2D.Double(x, y, w, h));
+        g2d.fill(new RoundRectangle2D.Double(x, y, w, h, rect.roundness, rect.roundness));
         // Stroke
         g2d.setColor(rect.strokeColor);
         g2d.setStroke(new BasicStroke((float) rect.strokeWeight));
-        g2d.draw(new Rectangle2D.Double(x, y, w, h));
+        g2d.draw(new RoundRectangle2D.Double(x, y, w, h, rect.roundness, rect.roundness));
     }
 
-    public void rect(double x, double y, double w, double h) {
-        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, rotation,
+    public void rect(double x, double y, double w, double h, double r) {
+        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, r, rotation,
                 translation, scale);
         rects.add(rect);
     }
 
+    public void rect(double x, double y, double w, double h) {
+        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, 1, rotation,
+                translation, scale);
+        rects.add(rect);
+    }
+
+    public void rect(Point p, double w, double h, double r) {
+        rect(p.x, p.y, w, h, r);
+    }
+
     public void rect(Point p, double w, double h) {
         rect(p.x, p.y, w, h);
+    }
+
+    public void rect(Point p, Point s, double r) {
+        rect(p.x, p.y, s.x, s.y, r);
     }
 
     public void rect(Point p, Point s) {
@@ -728,7 +744,6 @@ public class Applet extends JPanel {
         for (ShapeApplet s : shapes) {
             drawShape(s);
         }
-        delay(5);
         ellipses.clear();
         lines.clear();
         quads.clear();
