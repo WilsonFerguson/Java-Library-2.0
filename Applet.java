@@ -728,6 +728,7 @@ public class Applet extends JPanel {
         for (ShapeApplet s : shapes) {
             drawShape(s);
         }
+        delay(5);
         ellipses.clear();
         lines.clear();
         quads.clear();
