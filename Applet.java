@@ -717,6 +717,8 @@ public class Applet extends JPanel {
         g2d = (Graphics2D) g;
         this.g = g;
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         if (drawBackground) {
             Color prevColor = g2d.getColor();
             g2d.setColor(backgroundColor);
