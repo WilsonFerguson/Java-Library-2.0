@@ -54,6 +54,9 @@ public class Applet extends JPanel {
 
     public int width;
     public int height;
+    public int displayWidth;
+    public int displayHeight;
+    public double universalScale = 1;
 
     public boolean mousePressed = false;
     public int mouseButton = CENTER;
@@ -92,6 +95,13 @@ public class Applet extends JPanel {
     public boolean displayFrameRate = false;
 
     public void size(double width, double height) {
+        if (displayWidth == 0) {
+            Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
+            displayWidth = (int) displaySize.getWidth();
+            displayHeight = (int) displaySize.getHeight();
+        }
+        universalScale = displayWidth / width;
+
         setDoubleBuffered(true);
 
         this.width = (int) width;
@@ -116,9 +126,17 @@ public class Applet extends JPanel {
         addListeners();
     }
 
+    /**
+     * Note: Automatically sets width to 1920, and height to the same ratio as your
+     * display.
+     */
     public void fullScreen() {
-        this.width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        this.height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
+        displayWidth = (int) displaySize.getWidth();
+        displayHeight = (int) displaySize.getHeight();
+
+        this.width = 1920;
+        this.height = (int) (displayHeight * (1920.0 / displayWidth));
 
         size(width, height);
 
@@ -157,8 +175,12 @@ public class Applet extends JPanel {
 
         frame.addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent evt) {
-                mouseX = evt.getX() - 8;
-                mouseY = evt.getY() - 31;
+                mouseX = evt.getX();
+                mouseY = evt.getY();
+                mouseX /= universalScale;
+                mouseY /= universalScale;
+                mouseX -= 8 / universalScale;
+                mouseY -= 31 / universalScale;
                 mouse = new Point(mouseX, mouseY);
                 mouseMove();
             }
@@ -708,7 +730,7 @@ public class Applet extends JPanel {
                 g2d.drawLine((int) p1.x, (int) p1.y, (int) p2.x, (int) p2.y);
             }
         } else if (shape.mode == SMOOTH) {
-            // Catmull-Rom splines
+            // Catmull-Rom splines smoothing algorithm
             for (int i = 0; i < shape.points.size() - 3; i++) {
                 Point p1 = shape.points.get(i);
                 Point p2 = shape.points.get(i + 1);
@@ -773,6 +795,8 @@ public class Applet extends JPanel {
         super.paintComponent(g);
         g2d = (Graphics2D) g;
         this.g = g;
+
+        g2d.scale(universalScale, universalScale);
 
         // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         // RenderingHints.VALUE_ANTIALIAS_ON);

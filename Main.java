@@ -26,14 +26,16 @@ class Main extends Applet {
         // translate(x, 100);
         // rotate(x);
         rectMode(CORNER);
-        rect(width - 100, 100, 100, 100, 20); // 0, 0
+        rect(1920 - 100, 100, 100, 100, 20); // 0, 0
 
         // translate(0, 0);
         // rotate(0);
-        fill(Color.green);
-        textSize(24);
-        textAlign(CENTER);
-        text(x, mouseX, mouseY);
+        // fill(Color.green);
+        // textSize(24);
+        // textAlign(CENTER);
+        // text(x, mouseX, mouseY);
+        strokeWeight(10);
+        point(mouseX, mouseY);
 
         stroke(255);
         strokeWeight(10);
