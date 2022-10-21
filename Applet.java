@@ -91,14 +91,19 @@ public class Applet extends JPanel {
     public void size(double width, double height) {
         setDoubleBuffered(true);
 
-        frame = new JFrame();
-        frame.setSize((int) width, (int) height);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.add(this);
-
         this.width = (int) width;
         this.height = (int) height;
+
+        Dimension size = new Dimension(this.width, this.height);
+        setMinimumSize(size);
+
+        frame = new JFrame("Sketch");
+        frame.setMinimumSize(size);
+        frame.getContentPane().add(this);
+        frame.pack(); // If you pack, the size will become around 1200
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        frame.setVisible(true);
 
         g = frame.getGraphics();
         g2d = (Graphics2D) g;
@@ -107,6 +112,15 @@ public class Applet extends JPanel {
         lastTime = System.currentTimeMillis();
 
         addListeners();
+    }
+
+    public void fullScreen() {
+        this.width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        this.height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+
+        size(width, height);
+
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void addListeners() {
@@ -197,7 +211,7 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        frame.repaint();
+        repaint(); // Seems to work quite well compared to frame.repaint()
 
         rotation = 0;
         translation = Point.zero();
@@ -632,8 +646,16 @@ public class Applet extends JPanel {
         texts.add(textApplet);
     }
 
+    public void text(Object text, double x, double y) {
+        text(text.toString(), x, y);
+    }
+
     public void text(String text, Point p) {
         text(text, p.x, p.y);
+    }
+
+    public void text(Object text, Point p) {
+        text(text.toString(), p.x, p.y);
     }
 
     // Shape
@@ -717,12 +739,12 @@ public class Applet extends JPanel {
         g2d = (Graphics2D) g;
         this.g = g;
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (drawBackground) {
             Color prevColor = g2d.getColor();
             g2d.setColor(backgroundColor);
-            g2d.fillRect(0, 0, getWidth(), getHeight());
+            g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
         }
         for (EllipseApplet e : ellipses) {

@@ -10,7 +10,7 @@ class Main extends Applet {
     }
 
     public void setup() {
-        size(1920, 1080);
+        fullScreen(); // No flickering on laptop
         frameRate(60);
     }
 
@@ -27,12 +27,13 @@ class Main extends Applet {
         rectMode(CORNER);
         rect(x, 100, 100, 100, 20); // 0, 0
 
+    
         // translate(0, 0);
         // rotate(0);
         fill(Color.green);
         textSize(24);
         textAlign(CENTER);
-        text("Hello World!", mouseX, mouseY);
+        text(x, mouseX, mouseY);
 
         stroke(255);
         strokeWeight(2);
