@@ -44,8 +44,4 @@ class Main extends Applet {
         vertex(128, 400);
         endShape();
     }
-
-    public void mouseClick() {
-        saveStrings(new String[] { "Hello", "World" }, "test.txt");
-    }
 }
