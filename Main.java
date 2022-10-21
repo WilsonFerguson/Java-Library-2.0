@@ -16,6 +16,7 @@ class Main extends Applet {
 
     public void draw() {
         background(100);
+        displayFrameRate();
 
         fill(255, 0, 0);
         stroke(255);
@@ -34,6 +35,15 @@ class Main extends Applet {
         textAlign(CENTER);
         text(x, mouseX, mouseY);
 
-        displayFrameRate();
+        stroke(255);
+        strokeWeight(10);
+        beginShape(SMOOTH);
+        vertex(336, 364);
+        vertex(336, 364);
+        vertex(272, 76);
+        vertex(84, 68);
+        vertex(128, 400);
+        vertex(128, 400);
+        endShape();
     }
 }
