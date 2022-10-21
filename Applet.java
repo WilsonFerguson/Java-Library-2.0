@@ -52,11 +52,6 @@ public class Applet extends JPanel {
 
     public double startTime = 0;
 
-    public double targetFrameRate = 60;
-    public double frameRate = 0;
-    public double lastTime = 0;
-    public int frameCount = 0;
-
     public int width;
     public int height;
 
@@ -88,6 +83,14 @@ public class Applet extends JPanel {
     public final int RIGID = 2;
     public final int CLOSE = 0;
 
+    // FPS
+    public double targetFrameRate = 60;
+    public ArrayList<Double> frameRates = new ArrayList<Double>();
+    public double frameRate = 0;
+    public double lastTime = 0;
+    public int frameCount = 0;
+    public boolean displayFrameRate = false;
+
     public void size(double width, double height) {
         setDoubleBuffered(true);
 
@@ -98,11 +101,10 @@ public class Applet extends JPanel {
         setMinimumSize(size);
 
         frame = new JFrame("Sketch");
-        frame.setMinimumSize(size);
-        frame.getContentPane().add(this);
-        frame.pack(); // If you pack, the size will become around 1200
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(this);
 
+        frame.pack(); // completely changes the size of this
         frame.setVisible(true);
 
         g = frame.getGraphics();
@@ -120,9 +122,22 @@ public class Applet extends JPanel {
 
         size(width, height);
 
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Slightly changes the size
+    }
 
-        println(getSize(), frame.getSize());
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return new Dimension(width, height);
     }
 
     private void addListeners() {
@@ -197,7 +212,18 @@ public class Applet extends JPanel {
     }
 
     public void backendUpdate() {
-        frameRate = 1000.0 / (millis() - lastTime);
+        double nextFrameRate = 1000.0 / (millis() - lastTime);
+        if (frameRates.size() < 10) {
+            frameRates.add(nextFrameRate);
+        } else {
+            frameRates.remove(0);
+            frameRates.add(nextFrameRate);
+        }
+        frameRate = 0;
+        for (double frameRate : frameRates) {
+            this.frameRate += frameRate;
+        }
+        this.frameRate /= frameRates.size();
         lastTime = millis();
         frameCount++;
 
@@ -218,10 +244,17 @@ public class Applet extends JPanel {
         rotation = 0;
         translation = Point.zero();
         scale = 1;
+
+        displayFrameRate = false;
+        drawBackground = false;
     }
 
     public void frameRate(double targetFrameRate) {
         this.targetFrameRate = targetFrameRate;
+    }
+
+    public void displayFrameRate() {
+        displayFrameRate = true;
     }
 
     public void println(Object... args) {
@@ -749,6 +782,19 @@ public class Applet extends JPanel {
             g2d.setColor(backgroundColor);
             g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
+        }
+        if (displayFrameRate) {
+            Color prevColor = g2d.getColor();
+
+            String fps = "FPS: " + Helper.roundString(frameRate, 0);
+
+            double wid = textWidth(fps);
+
+            g2d.setColor(new Color(0, 0, 0, 100));
+            g2d.fillRect(width - (int) wid - 10, 0, (int) wid + 10, 20);
+
+            g2d.setColor(new Color(255, 255, 255));
+            g2d.drawString(fps, width - (int) wid - 5, 15);
         }
         for (EllipseApplet e : ellipses) {
             drawEllipse(e);

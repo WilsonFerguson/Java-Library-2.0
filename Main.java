@@ -19,15 +19,14 @@ class Main extends Applet {
 
         fill(255, 0, 0);
         stroke(255);
-        strokeWeight(5);
+        strokeWeight(1);
 
         x += 1;
         // translate(x, 100);
         // rotate(x);
         rectMode(CORNER);
-        rect(1200, 100, 100, 100, 20); // 0, 0
+        rect(width - 100, 100, 100, 100, 20); // 0, 0
 
-    
         // translate(0, 0);
         // rotate(0);
         fill(Color.green);
@@ -35,15 +34,6 @@ class Main extends Applet {
         textAlign(CENTER);
         text(x, mouseX, mouseY);
 
-        stroke(255);
-        strokeWeight(2);
-        beginShape(SMOOTH);
-        vertex(336, 364);
-        vertex(336, 364);
-        vertex(272, 76);
-        vertex(84, 68);
-        vertex(128, 400);
-        vertex(128, 400);
-        endShape();
+        displayFrameRate();
     }
 }
