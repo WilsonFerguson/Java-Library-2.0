@@ -1,5 +1,5 @@
 import java.awt.Color;
-import java.awt.event.*;
+import java.awt.*;
 
 class Main extends Applet {
 

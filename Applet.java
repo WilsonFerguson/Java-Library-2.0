@@ -125,21 +125,6 @@ public class Applet extends JPanel {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Slightly changes the size
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(width, height);
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(width, height);
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-        return new Dimension(width, height);
-    }
-
     private void addListeners() {
         frame.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
@@ -201,6 +186,21 @@ public class Applet extends JPanel {
                 keyType(keyText);
             }
         });
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return new Dimension(width, height);
     }
 
     public void setup() {
@@ -775,7 +775,7 @@ public class Applet extends JPanel {
         this.g = g;
 
         // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        //         RenderingHints.VALUE_ANTIALIAS_ON);
+        // RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (drawBackground) {
             Color prevColor = g2d.getColor();
