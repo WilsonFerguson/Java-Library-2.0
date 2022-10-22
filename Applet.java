@@ -850,6 +850,7 @@ public class Applet extends JPanel {
 
     public void exit() {
         frame.dispose();
+        System.exit(0);
     }
 
     // ------------------------------------------------------------
