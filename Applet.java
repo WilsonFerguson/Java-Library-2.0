@@ -818,8 +818,8 @@ public class Applet extends JPanel {
             g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
         }
-        for (AppletComponent component : components) {
-            drawSpecificShape(component);
+        for (int i = 0; i < components.size(); i++) {
+            drawSpecificShape(components.get(i));
         }
         components.clear();
 
