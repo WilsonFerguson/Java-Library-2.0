@@ -4,12 +4,15 @@ import java.awt.Color;
 public class ShapeApplet extends AppletComponent {
 
     public ArrayList<Point> points = new ArrayList<Point>();
-    public Color color;
+    public Color strokeColor;
+    public Color fillColor;
     public double strokeWeight;
     public int mode;
 
-    public ShapeApplet(Color color, double rotate, Point translate, double scale, double strokeWeight, int mode) {
-        this.color = color;
+    public ShapeApplet(Color strokeColor, Color fillColor, double rotate, Point translate, double scale,
+            double strokeWeight, int mode) {
+        this.strokeColor = strokeColor;
+        this.fillColor = fillColor;
         this.rotate = rotate;
         this.translate = translate;
         this.scale = scale;

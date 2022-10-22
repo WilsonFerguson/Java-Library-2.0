@@ -1,4 +1,5 @@
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class Helper {
 
@@ -198,6 +199,20 @@ public class Helper {
                 str += " ";
         }
         return str + "";
+    }
+
+    /**
+     * Converts an {@code ArrayList<Integer>} to an {@code int[]}.
+     * 
+     * @param arr
+     * @return int[]
+     */
+    public static int[] toIntArray(ArrayList<Integer> arr) {
+        int[] intArr = new int[arr.size()];
+        for (int i = 0; i < arr.size(); i++) {
+            intArr[i] = arr.get(i);
+        }
+        return intArr;
     }
 
     /**

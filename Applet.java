@@ -272,7 +272,7 @@ public class Applet extends JPanel {
 
         repaint(); // Calling repaint() causes a lot of lag, so we'll just call
         // paint() instead
-       // paintComponent(getGraphics()); // Kinda hacky, but it works
+        // paintComponent(getGraphics()); // Kinda hacky, but it works
 
         rotation = 0;
         translation = Point.zero();
@@ -732,15 +732,35 @@ public class Applet extends JPanel {
         g2d.rotate(shape.rotate);
 
         if (shape.mode == RIGID) {
-            g2d.setColor(shape.color);
+            int[] xPoints = new int[shape.points.size()];
+            int[] yPoints = new int[shape.points.size()];
+
+            g2d.setColor(shape.strokeColor);
             g2d.setStroke(new BasicStroke((float) shape.strokeWeight));
             for (int i = 0; i < shape.points.size() - 1; i++) {
                 Point p1 = shape.points.get(i);
                 Point p2 = shape.points.get(i + 1);
                 g2d.drawLine((int) p1.x, (int) p1.y, (int) p2.x, (int) p2.y);
+
+                xPoints[i] = (int) p1.x;
+                yPoints[i] = (int) p1.y;
             }
+            xPoints[shape.points.size() - 1] = (int) shape.points.get(shape.points.size()
+                    - 1).x;
+            yPoints[shape.points.size() - 1] = (int) shape.points.get(shape.points.size()
+                    - 1).y;
+            // Draw the filled in shape
+            g2d.setColor(shape.fillColor);
+            g2d.fillPolygon(xPoints, yPoints, shape.points.size());
         } else if (shape.mode == SMOOTH) {
             // Catmull-Rom splines smoothing algorithm
+
+            g2d.setColor(shape.strokeColor);
+            g2d.setStroke(new BasicStroke((float) shape.strokeWeight));
+
+            ArrayList<Integer> xPoints = new ArrayList<Integer>();
+            ArrayList<Integer> yPoints = new ArrayList<Integer>();
+
             for (int i = 0; i < shape.points.size() - 3; i++) {
                 Point p1 = shape.points.get(i);
                 Point p2 = shape.points.get(i + 1);
@@ -762,21 +782,27 @@ public class Applet extends JPanel {
                             + (-x1 + 3 * x2 - 3 * x3 + x4) * t * t * t);
                     double y = 0.5 * ((2 * y2) + (-y1 + y3) * t + (2 * y1 - 5 * y2 + 4 * y3 - y4) * t * t
                             + (-y1 + 3 * y2 - 3 * y3 + y4) * t * t * t);
-                    g2d.setColor(shape.color);
-                    g2d.setStroke(new BasicStroke((float) shape.strokeWeight));
-                    g2d.drawLine((int) x, (int) y, (int) x, (int) y);
+                    int xInt = (int) x;
+                    int yInt = (int) y;
+                    g2d.drawLine(xInt, yInt, xInt, yInt);
+                    xPoints.add(xInt);
+                    yPoints.add(yInt);
                     t += 0.01;
                 }
             }
+
+            // Draw the filled in shape
+            g2d.setColor(shape.fillColor);
+            g2d.fillPolygon(Helper.toIntArray(xPoints), Helper.toIntArray(yPoints), xPoints.size());
         }
     }
 
     public void beginShape() {
-        shape = new ShapeApplet(strokeColor, rotation, translation, scale, strokeWeight, 0);
+        shape = new ShapeApplet(strokeColor, fillColor, rotation, translation, scale, strokeWeight, RIGID);
     }
 
     public void beginShape(int mode) {
-        shape = new ShapeApplet(strokeColor, rotation, translation, scale, strokeWeight, mode);
+        shape = new ShapeApplet(strokeColor, fillColor, rotation, translation, scale, strokeWeight, mode);
     }
 
     public void endShape() {

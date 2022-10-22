@@ -35,9 +35,11 @@ class Main extends Applet {
         stroke(Color.blue);
         point(mouseX, mouseY);
 
+        fill(0, 255, 0);
+
         stroke(255);
         strokeWeight(10);
-        beginShape(SMOOTH);
+        beginShape(SMOOTH); // SMOOTH
         vertex(336, 364);
         vertex(336, 364);
         vertex(272, 76);
