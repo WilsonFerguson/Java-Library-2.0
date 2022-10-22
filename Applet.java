@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 public class Applet extends JPanel {
 
     private JFrame frame;
-    private Graphics g;
     private Graphics2D g2d;
 
     public final int CENTER = 0;
@@ -93,6 +92,8 @@ public class Applet extends JPanel {
     private double noiseZOffset = 0;
     private double noiseWOffset = 0;
 
+    private boolean aliasing = false;
+
     public void size(double width, double height) {
         if (displayWidth == 0) {
             Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -115,9 +116,6 @@ public class Applet extends JPanel {
 
         frame.pack(); // completely changes the size of this
         frame.setVisible(true);
-
-        g = frame.getGraphics();
-        g2d = (Graphics2D) g;
 
         startTime = System.currentTimeMillis();
         lastTime = System.currentTimeMillis();
@@ -197,6 +195,10 @@ public class Applet extends JPanel {
                 key = keyText;
 
                 keyPress();
+
+                if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    exit();
+                }
             }
 
             public void keyReleased(KeyEvent evt) {
@@ -208,8 +210,6 @@ public class Applet extends JPanel {
             }
 
             public void keyTyped(KeyEvent evt) {
-                String keyText = String.valueOf(evt.getKeyChar());
-
                 keyType();
             }
         });
@@ -236,6 +236,10 @@ public class Applet extends JPanel {
 
     public void draw() {
         // Empty
+    }
+
+    public void aliasing() {
+        aliasing = true;
     }
 
     public void backendUpdate() {
@@ -266,7 +270,9 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        repaint(); // Seems to work quite well compared to frame.repaint()
+        repaint(); // Calling repaint() causes a lot of lag, so we'll just call
+        // paint() instead
+       // paintComponent(getGraphics()); // Kinda hacky, but it works
 
         rotation = 0;
         translation = Point.zero();
@@ -813,15 +819,15 @@ public class Applet extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paint(Graphics g) {
+        super.paint(g);
         g2d = (Graphics2D) g;
-        this.g = g;
 
         g2d.scale(universalScale, universalScale);
 
-        // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        // RenderingHints.VALUE_ANTIALIAS_ON);
+        if (aliasing)
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (drawBackground) {
             Color prevColor = g2d.getColor();

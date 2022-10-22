@@ -12,6 +12,7 @@ class Main extends Applet {
     public void setup() {
         fullScreen(); // No flickering on laptop
         frameRate(60);
+        // aliasing();
     }
 
     public void draw() {
