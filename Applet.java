@@ -58,7 +58,7 @@ public class Applet extends JPanel {
 
     public boolean mousePressed = false;
     public int mouseButton = CENTER;
-    public char key = ' ';
+    public String key = "";
     public int keyCode = 0;
 
     // Drawing
@@ -181,24 +181,25 @@ public class Applet extends JPanel {
 
         frame.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent evt) {
-                key = evt.getKeyChar();
                 keyCode = evt.getKeyCode();
-
                 String keyText = KeyEvent.getKeyText(evt.getKeyCode());
-                keyPress(keyText);
+                key = keyText;
+
+                keyPress();
             }
 
             public void keyReleased(KeyEvent evt) {
-                key = evt.getKeyChar();
                 keyCode = evt.getKeyCode();
-
                 String keyText = KeyEvent.getKeyText(evt.getKeyCode());
-                keyRelease(keyText);
+                key = keyText;
+
+                keyRelease();
             }
 
             public void keyTyped(KeyEvent evt) {
                 String keyText = String.valueOf(evt.getKeyChar());
-                keyType(keyText);
+
+                keyType();
             }
         });
     }
@@ -303,29 +304,29 @@ public class Applet extends JPanel {
     }
 
     // Mouse inputs
-    public void mousePress() {
+    void mousePress() {
     }
 
-    public void mouseRelease() {
+    void mouseRelease() {
     }
 
-    public void mouseClick() {
+    void mouseClick() {
     }
 
-    public void mouseDrag() {
+    void mouseDrag() {
     }
 
-    public void mouseScroll(int amount) {
+    void mouseScroll(int amount) {
     }
 
-    public void mouseMove() {
+    void mouseMove() {
     }
 
     // Keyboard inputs
-    public void keyPress(String key) {
+    void keyPress() {
     }
 
-    public void keyRelease(String key) {
+    void keyRelease() {
     }
 
     /**
@@ -334,7 +335,7 @@ public class Applet extends JPanel {
      * 
      * @param key
      */
-    public void keyType(String key) {
+    void keyType() {
     }
 
     // Drawing Modes

@@ -45,4 +45,5 @@ class Main extends Applet {
         vertex(128, 400);
         endShape();
     }
+
 }
