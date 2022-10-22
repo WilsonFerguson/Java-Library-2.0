@@ -87,6 +87,12 @@ public class Applet extends JPanel {
     private boolean displayFrameRate = false;
     private double startTime = 0;
 
+    // Random noise offsets
+    private double noiseXOffset = 0;
+    private double noiseYOffset = 0;
+    private double noiseZOffset = 0;
+    private double noiseWOffset = 0;
+
     public void size(double width, double height) {
         if (displayWidth == 0) {
             Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -117,6 +123,11 @@ public class Applet extends JPanel {
         lastTime = System.currentTimeMillis();
 
         addListeners();
+
+        noiseXOffset = Math.random() * 1000;
+        noiseYOffset = Math.random() * 1000;
+        noiseZOffset = Math.random() * 1000;
+        noiseWOffset = Math.random() * 1000;
     }
 
     /**
@@ -1144,19 +1155,19 @@ public class Applet extends JPanel {
     }
 
     public double noise(double x, double y, double z, double w) {
-        return Helper.perlinNoise(x, y, z, w);
+        return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset, z + noiseZOffset, w + noiseWOffset);
     }
 
     public double noise(double x, double y, double z) {
-        return Helper.perlinNoise(x, y, z);
+        return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset, z + noiseZOffset);
     }
 
     public double noise(double x, double y) {
-        return Helper.perlinNoise(x, y);
+        return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset);
     }
 
     public double noise(double x) {
-        return noise(x, 0);
+        return noise(x + noiseXOffset, 0);
     }
 
     // Color
