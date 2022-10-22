@@ -158,6 +158,16 @@ public class Point {
     }
 
     /**
+     * Normalizes the {@code Point} p.
+     * 
+     */
+    public void normalize() {
+        double length = Math.sqrt(x * x + y * y);
+        if (length != 0.0)
+            divide(length);
+    }
+
+    /**
      * Sets the magnitude to {@code double} magnitude.
      * 
      * @param magnitude
@@ -421,6 +431,18 @@ public class Point {
     public static Point divide(Point point, double divisor) {
         Point p = point.copy();
         p.divide(divisor);
+        return p;
+    }
+
+    /**
+     * Static method to normalize a given {@code Point} point.
+     * 
+     * @param point
+     * @return Point
+     */
+    public static Point normalize(Point point) {
+        Point p = point.copy();
+        p.normalize();
         return p;
     }
 
