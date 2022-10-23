@@ -53,8 +53,4 @@ class Main extends Applet {
         vertex(128, 400);
         endShape();
     }
-
-    public void mouseScroll(int amount) {
-        println(amount);
-    }
 }

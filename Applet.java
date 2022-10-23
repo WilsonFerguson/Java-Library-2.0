@@ -224,6 +224,86 @@ public class Applet extends JPanel {
         });
     }
 
+    // Mouse inputs (protected so that they can be overridden)
+    protected void mousePress() {
+        mousePressed();
+    }
+
+    protected void mousePressed() {
+
+    }
+
+    protected void mouseRelease() {
+        mouseReleased();
+    }
+
+    protected void mouseReleased() {
+
+    }
+
+    protected void mouseClick() {
+        mouseClicked();
+    }
+
+    protected void mouseClicked() {
+
+    }
+
+    protected void mouseDrag() {
+        mouseDragged();
+    }
+
+    protected void mouseDragged() {
+
+    }
+
+    protected void mouseScroll(int amount) {
+        mouseScrolled(amount);
+    }
+
+    protected void mouseScrolled(int amount) {
+
+    }
+
+    protected void mouseMove() {
+        mouseMoved();
+    }
+
+    protected void mouseMoved() {
+
+    }
+
+    // Keyboard inputs
+    protected void keyPress() {
+        keyPressed();
+    }
+
+    protected void keyPressed() {
+
+    }
+
+    protected void keyRelease() {
+        keyReleased();
+    }
+
+    protected void keyReleased() {
+
+    }
+
+    protected void keyType() {
+        keyTyped();
+    }
+
+    /**
+     * Warning: This method is not called when the user presses any modifier (e.g.
+     * shift, ctrl, alt, backspace).
+     * 
+     * @param key
+     */
+    protected void keyTyped() {
+
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(width, height);
@@ -331,41 +411,6 @@ public class Applet extends JPanel {
 
     public void background(double gray) {
         background(gray, 255);
-    }
-
-    // Mouse inputs (protected so that they can be overridden)
-    protected void mousePress() {
-    }
-
-    protected void mouseRelease() {
-    }
-
-    protected void mouseClick() {
-    }
-
-    protected void mouseDrag() {
-    }
-
-    protected void mouseScroll(int amount) {
-    }
-
-    protected void mouseMove() {
-    }
-
-    // Keyboard inputs
-    protected void keyPress() {
-    }
-
-    protected void keyRelease() {
-    }
-
-    /**
-     * Warning: This method is not called when the user presses any modifier (e.g.
-     * shift, ctrl, alt, backspace).
-     * 
-     * @param key
-     */
-    protected void keyType() {
     }
 
     // Drawing Modes
