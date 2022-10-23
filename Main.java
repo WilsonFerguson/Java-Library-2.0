@@ -27,7 +27,12 @@ class Main extends Applet {
         // translate(x, 100);
         // rotate(x);
         rectMode(CORNER);
-        rect(1920 - 100, 100, 100, 100, 20); // 0, 0
+        rect(500, 100, 200, 100, 20);
+
+        textAlign(CENTER);
+        fill(255);
+        textSize(64);
+        text("Hixcvxcv", 600, 150);
 
         // translate(0, 0);
         // rotate(0);
@@ -49,4 +54,7 @@ class Main extends Applet {
         endShape();
     }
 
+    public void mouseScroll(int amount) {
+        println(amount);
+    }
 }

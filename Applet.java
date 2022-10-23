@@ -22,7 +22,7 @@ public class Applet extends JPanel {
     private Graphics2D g2d;
 
     public final int CENTER = 0;
-    public final int CORNER = 1;
+    public final int CORNER = 4;
     public final int LEFT = 1;
     public final int RIGHT = 3;
 
@@ -94,6 +94,8 @@ public class Applet extends JPanel {
 
     private boolean aliasing = false;
 
+    private boolean exitOnEscape = true;
+
     public void size(double width, double height) {
         if (displayWidth == 0) {
             Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -163,16 +165,6 @@ public class Applet extends JPanel {
                 mouseButton = evt.getButton();
                 mouseClick();
             }
-
-            public void mouseDragged(MouseEvent evt) {
-                mouseDrag();
-            }
-
-            public void mouseWheelMoved(MouseWheelEvent evt) {
-                int notches = evt.getWheelRotation();
-                println("Mouse Wheel Moved: " + notches);
-                mouseScroll(notches);
-            }
         });
 
         frame.addMouseMotionListener(new MouseMotionAdapter() {
@@ -186,6 +178,23 @@ public class Applet extends JPanel {
                 mouse = new Point(mouseX, mouseY);
                 mouseMove();
             }
+
+            public void mouseDragged(MouseEvent evt) {
+                mouseX = evt.getX();
+                mouseY = evt.getY();
+                mouseX /= universalScale;
+                mouseY /= universalScale;
+                mouseX -= 8 / universalScale;
+                mouseY -= 31 / universalScale;
+                mouseDrag();
+            }
+        });
+
+        frame.addMouseWheelListener(new MouseWheelListener() {
+            public void mouseWheelMoved(MouseWheelEvent evt) {
+                int notches = evt.getWheelRotation();
+                mouseScroll(notches);
+            }
         });
 
         frame.addKeyListener(new KeyAdapter() {
@@ -196,7 +205,7 @@ public class Applet extends JPanel {
 
                 keyPress();
 
-                if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                if (evt.getKeyCode() == KeyEvent.VK_ESCAPE && exitOnEscape) {
                     exit();
                 }
             }
@@ -282,6 +291,10 @@ public class Applet extends JPanel {
         drawBackground = false;
     }
 
+    public void exitOnEscape(boolean exitOnEscape) {
+        this.exitOnEscape = exitOnEscape;
+    }
+
     public void frameRate(double targetFrameRate) {
         this.targetFrameRate = targetFrameRate;
     }
@@ -320,30 +333,30 @@ public class Applet extends JPanel {
         background(gray, 255);
     }
 
-    // Mouse inputs
-    void mousePress() {
+    // Mouse inputs (protected so that they can be overridden)
+    protected void mousePress() {
     }
 
-    void mouseRelease() {
+    protected void mouseRelease() {
     }
 
-    void mouseClick() {
+    protected void mouseClick() {
     }
 
-    void mouseDrag() {
+    protected void mouseDrag() {
     }
 
-    void mouseScroll(int amount) {
+    protected void mouseScroll(int amount) {
     }
 
-    void mouseMove() {
+    protected void mouseMove() {
     }
 
     // Keyboard inputs
-    void keyPress() {
+    protected void keyPress() {
     }
 
-    void keyRelease() {
+    protected void keyRelease() {
     }
 
     /**
@@ -352,7 +365,7 @@ public class Applet extends JPanel {
      * 
      * @param key
      */
-    void keyType() {
+    protected void keyType() {
     }
 
     // Drawing Modes
@@ -688,8 +701,10 @@ public class Applet extends JPanel {
         String t = text.text;
         double x = text.x;
         double y = text.y;
-        double w = textWidth(t);
-        double h = textHeight(t);
+
+        g2d.setFont(new Font(text.font, Font.PLAIN, (int) text.size));
+        double w = g2d.getFontMetrics().stringWidth(t);
+        double h = g2d.getFontMetrics().getHeight();
 
         if (text.alignment == CENTER) {
             x -= w / 2;
@@ -703,7 +718,6 @@ public class Applet extends JPanel {
         g2d.rotate(text.rotate);
 
         g2d.setColor(text.color);
-        g2d.setFont(new Font(text.font, Font.PLAIN, (int) text.size));
         g2d.drawString(t, (int) x, (int) y);
     }
 
@@ -867,6 +881,14 @@ public class Applet extends JPanel {
         components.clear();
 
         if (displayFrameRate) {
+            // Set drawing modes to default but save values to restore later
+            int rectM = rectMode;
+            rectMode(CORNER);
+            int textA = textAlign;
+            textAlign(LEFT);
+            double textS = textSize;
+            g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+
             Color prevColor = g2d.getColor();
 
             String fps = "FPS: " + Helper.roundString(frameRate, 0);
@@ -880,6 +902,10 @@ public class Applet extends JPanel {
             g2d.drawString(fps, width - (int) wid - 5, 15);
 
             g2d.setColor(prevColor);
+
+            rectMode(rectM);
+            textAlign(textA);
+            textSize(textS);
         }
     }
 
