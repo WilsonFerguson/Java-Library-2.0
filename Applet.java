@@ -13,6 +13,7 @@ import java.util.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -359,9 +360,17 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        repaint(); // Calling repaint() causes a lot of lag, so we'll just call
+        //repaint(); // Calling repaint() causes a lot of lag, so we'll just call
         // paint() instead
-        // paintComponent(getGraphics()); // Kinda hacky, but it works
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    SwingUtilities.updateComponentTreeUI(frame);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         rotation = 0;
         translation = Point.zero();
@@ -904,8 +913,8 @@ public class Applet extends JPanel {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g2d = (Graphics2D) g;
 
         g2d.scale(universalScale, universalScale);
