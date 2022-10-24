@@ -96,12 +96,12 @@ public class Applet extends JPanel {
 
     private boolean exitOnEscape = true;
 
+    private boolean fullScreen = false;
+
     public void size(double width, double height) {
-        if (displayWidth == 0) {
-            Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
-            displayWidth = (int) displaySize.getWidth();
-            displayHeight = (int) displaySize.getHeight();
-        }
+        Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
+        displayWidth = (int) displaySize.getWidth();
+        displayHeight = (int) displaySize.getHeight();
         universalScale = displayWidth / width;
 
         setDoubleBuffered(true);
@@ -116,8 +116,8 @@ public class Applet extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(this);
 
-        frame.pack(); // completely changes the size of this
-        frame.setVisible(true);
+        frame.pack();
+        frame.setResizable(false);
 
         startTime = System.currentTimeMillis();
         lastTime = System.currentTimeMillis();
@@ -128,6 +128,8 @@ public class Applet extends JPanel {
         noiseYOffset = Math.random() * 1000;
         noiseZOffset = Math.random() * 1000;
         noiseWOffset = Math.random() * 1000;
+
+        frame.setVisible(true);
     }
 
     /**
@@ -138,13 +140,41 @@ public class Applet extends JPanel {
         Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
         displayWidth = (int) displaySize.getWidth();
         displayHeight = (int) displaySize.getHeight();
+        universalScale = displayWidth / 1920.0;
 
         this.width = 1920;
         this.height = (int) (displayHeight * (1920.0 / displayWidth));
 
-        size(width, height);
+        Dimension size = new Dimension(this.width, this.height);
+        setMinimumSize(size);
 
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Slightly changes the size
+        frame = new JFrame("Sketch");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setUndecorated(true);
+
+        frame.getContentPane().add(this);
+
+        frame.pack();
+        frame.setResizable(false);
+
+        startTime = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
+
+        addListeners();
+
+        noiseXOffset = Math.random() * 1000;
+        noiseYOffset = Math.random() * 1000;
+        noiseZOffset = Math.random() * 1000;
+        noiseWOffset = Math.random() * 1000;
+
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setVisible(true);
+
+        fullScreen = true;
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 
     private void addListeners() {
@@ -173,8 +203,10 @@ public class Applet extends JPanel {
                 mouseY = evt.getY();
                 mouseX /= universalScale;
                 mouseY /= universalScale;
-                mouseX -= 8 / universalScale;
-                mouseY -= 31 / universalScale;
+                if (!fullScreen) {
+                    mouseX -= 8 / universalScale;
+                    mouseY -= 31 / universalScale;
+                }
                 mouse = new Point(mouseX, mouseY);
                 mouseMove();
             }
@@ -184,8 +216,10 @@ public class Applet extends JPanel {
                 mouseY = evt.getY();
                 mouseX /= universalScale;
                 mouseY /= universalScale;
-                mouseX -= 8 / universalScale;
-                mouseY -= 31 / universalScale;
+                if (!fullScreen) {
+                    mouseX -= 8 / universalScale;
+                    mouseY -= 31 / universalScale;
+                }
                 mouseDrag();
             }
         });
