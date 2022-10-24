@@ -11,8 +11,7 @@ class Main extends Applet {
 
     public void setup() {
         fullScreen();
-        frameRate(60);
-        // aliasing();
+        //aliasing(); // so slow :(
     }
 
     public void draw() {
