@@ -404,12 +404,11 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        // repaint(); // Calling repaint() causes a lot of lag, so we'll just call
-        // paint() instead
+        //repaint(); // Calling repaint() causes le flickering
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
-                    SwingUtilities.updateComponentTreeUI(frame);
+                    SwingUtilities.updateComponentTreeUI(frame); // This is the magic
                 }
             });
         } catch (InvocationTargetException | InterruptedException e) {
