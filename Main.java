@@ -52,5 +52,12 @@ class Main extends Applet {
         vertex(128, 400);
         vertex(128, 400);
         endShape();
+
+        // pixels not currently working
+        loadPixels();
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i] = 0;
+        }
+        updatePixels();
     }
 }

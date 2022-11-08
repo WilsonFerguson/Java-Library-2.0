@@ -78,6 +78,10 @@ public class Applet extends JPanel {
     public final int RIGID = 2;
     public final int CLOSE = 0;
 
+    // Pixels
+    private BufferedImage image;
+    public int[] pixels;
+
     // FPS
     private double targetFrameRate = 60;
     private ArrayList<Double> frameRates = new ArrayList<Double>();
@@ -131,6 +135,9 @@ public class Applet extends JPanel {
         noiseWOffset = Math.random() * 1000;
 
         frame.setVisible(true);
+
+        pixels = new int[(int) (width * height)];
+        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
     }
 
     /**
@@ -172,6 +179,9 @@ public class Applet extends JPanel {
         frame.setVisible(true);
 
         fullScreen = true;
+
+        pixels = new int[(int) (width * height)];
+        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
     }
 
     public JFrame getFrame() {
@@ -394,7 +404,7 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        //repaint(); // Calling repaint() causes a lot of lag, so we'll just call
+        // repaint(); // Calling repaint() causes a lot of lag, so we'll just call
         // paint() instead
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
@@ -409,6 +419,9 @@ public class Applet extends JPanel {
         rotation = 0;
         translation = Point.zero();
         scale = 1;
+
+        pixels = new int[(int) (width * height)];
+        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
 
         displayFrameRate = false;
         drawBackground = false;
@@ -928,6 +941,33 @@ public class Applet extends JPanel {
         vertex(p.x, p.y);
     }
 
+    // Pixels
+    public Color get(int x, int y) {
+        return new Color(image.getRGB(x, y));
+    }
+
+    public void set(int x, int y, int color) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            pixels[x + y * width] = color;
+        }
+    }
+
+    public void updatePixels() {
+        for (int i = 0; i < pixels.length; i++) {
+            int x = i % width;
+            int y = i / width;
+            image.setRGB(x, y, pixels[i]);
+        }
+    }
+
+    public void loadPixels() {
+        for (int i = 0; i < pixels.length; i++) {
+            int x = i % width;
+            int y = i / width;
+            pixels[i] = image.getRGB(x, y);
+        }
+    }
+
     private void drawSpecificShape(AppletComponent component) {
         if (component instanceof EllipseApplet) {
             drawEllipse((EllipseApplet) component);
@@ -963,6 +1003,7 @@ public class Applet extends JPanel {
             g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
         }
+
         for (int i = 0; i < components.size(); i++) {
             drawSpecificShape(components.get(i));
         }
@@ -995,6 +1036,9 @@ public class Applet extends JPanel {
             textAlign(textA);
             textSize(textS);
         }
+
+        // Draw pixels
+        g2d.drawImage(image, 0, 0, null);
     }
 
     public void delay(int millis) {
