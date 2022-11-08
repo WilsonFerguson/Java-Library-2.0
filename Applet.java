@@ -404,7 +404,7 @@ public class Applet extends JPanel {
         pmouseY = mouseY;
         pmouse = mouse.copy();
 
-        //repaint(); // Calling repaint() causes le flickering
+        // repaint(); // Calling repaint() causes le flickering
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
@@ -1360,6 +1360,28 @@ public class Applet extends JPanel {
     }
 
     // Color
+    public Color color(double gray, double alpha) {
+        int g = (int) Helper.constrain(gray, 0, 255);
+        int a = (int) Helper.constrain(alpha, 0, 255);
+        return new Color(g, g, g, a);
+    }
+
+    public Color color(double gray) {
+        return color(gray, 255);
+    }
+
+    public Color color(double red, double green, double blue, double alpha) {
+        int r = (int) Helper.constrain(red, 0, 255);
+        int g = (int) Helper.constrain(green, 0, 255);
+        int b = (int) Helper.constrain(blue, 0, 255);
+        int a = (int) Helper.constrain(alpha, 0, 255);
+        return new Color(r, g, b, a);
+    }
+
+    public Color color(double red, double green, double blue) {
+        return color(red, green, blue, 255);
+    }
+
     public int alpha(Color color) {
         return color.getAlpha();
     }

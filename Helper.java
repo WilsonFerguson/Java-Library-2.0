@@ -154,6 +154,20 @@ public class Helper {
     }
 
     /**
+     * Maps a given {@code int} value from one range to another.
+     * 
+     * @param value
+     * @param start1
+     * @param stop1
+     * @param start2
+     * @param stop2
+     * @return int
+     */
+    public static int map(int value, int start1, int stop1, int start2, int stop2) {
+        return (int) map((double) value, (double) start1, (double) stop1, (double) start2, (double) stop2);
+    }
+
+    /**
      * Returns true if the given {@code String} is an integer.
      * 
      * @param str
@@ -322,6 +336,17 @@ public class Helper {
      * Returns a constrained {@code double} value.
      */
     public static double constrain(double value, double min, double max) {
+        if (value < min)
+            return min;
+        if (value > max)
+            return max;
+        return value;
+    }
+
+    /**
+     * Returns a constrained {@code int} value.
+     */
+    public static int constrain(int value, int min, int max) {
         if (value < min)
             return min;
         if (value > max)
