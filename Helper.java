@@ -4,45 +4,45 @@ import java.util.ArrayList;
 public class Helper {
 
     /**
-     * Returns a {@code double} distance between two points given {@code int} x1,
+     * Returns a {@code float} distance between two points given {@code int} x1,
      * {@code int} y1, {@code int} x2, and {@code int} y2.
      * 
      * @param x1
      * @param y1
      * @param x2
      * @param y2
-     * @return double
+     * @return float
      */
-    public static double getDistance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    public static float getDistance(float x1, float y1, float x2, float y2) {
+        return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
     /**
-     * Returns a {@code double} distance between two points given {@code Point} p1
+     * Returns a {@code float} distance between two points given {@code Point} p1
      * and {@code Point} p2.
      * 
      * @param p1
      * @param p2
-     * @return double
+     * @return float
      */
-    public static double getDistance(Point p1, Point p2) {
+    public static float getDistance(Point p1, Point p2) {
         return getDistance(p1.x, p1.y, p2.x, p2.y);
     }
 
     /**
-     * Returns a {@code double} random value between a {@code double} min and
-     * {@code double} max.
+     * Returns a {@code float} random value between a {@code float} min and
+     * {@code float} max.
      * 
      * @param min
      * @param max
-     * @return double
+     * @return float
      */
-    public static double random(double min, double max) {
-        return Math.random() * (max - min) + min;
+    public static float random(float min, float max) {
+        return (float) (Math.random() * (max - min) + min);
     }
 
     /**
-     * Returns a {@code double} random value between a {@code int} min and
+     * Returns a {@code float} random value between a {@code int} min and
      * {@code int} max.
      * 
      * @param min
@@ -50,21 +50,21 @@ public class Helper {
      * @return int
      */
     public static int random(int min, int max) {
-        return (int) random((double) min, (double) max);
+        return (int) random((float) min, (float) max);
     }
 
     /**
-     * Returns a {@code double} random value between 0 and {@code double} max.
+     * Returns a {@code float} random value between 0 and {@code float} max.
      * 
      * @param max
-     * @return double
+     * @return float
      */
-    public static double random(double max) {
+    public static float random(float max) {
         return random(0, max);
     }
 
     /**
-     * Returns a {@code double} random value between 0 and {@code int} max.
+     * Returns a {@code float} random value between 0 and {@code int} max.
      * 
      * @param max
      * @return int
@@ -74,38 +74,38 @@ public class Helper {
     }
 
     /**
-     * Returns a {@code double} random value between 0 and 1.
+     * Returns a {@code float} random value between 0 and 1.
      * 
-     * @return double
+     * @return float
      */
-    public static double random() {
+    public static float random() {
         return random(1);
     }
 
     /**
-     * Returns a {@code String} rounded number given a {@code double} number and
+     * Returns a {@code String} rounded number given a {@code float} number and
      * {@code int} decimal places.
      * 
      * @param num
      * @param places
      * @return String
      */
-    public static String roundString(double num, int places) {
-        double factor = Math.pow(10, places);
-        double rounded = Math.round(num * factor) / factor;
+    public static String roundString(float num, int places) {
+        float factor = (float) Math.pow(10, places);
+        float rounded = Math.round(num * factor) / factor;
         if (rounded % 1 == 0)
             return Integer.toString((int) rounded);
 
-        return Double.toString(rounded);
+        return Float.toString(rounded);
     }
 
     /**
-     * Waits a given {@code double} milliseconds. {@code double} milliseconds are
+     * Waits a given {@code float} milliseconds. {@code float} milliseconds are
      * converted to {@code long} milliseconds.
      * 
      * @param millis
      */
-    public static void wait(double millis) {
+    public static void wait(float millis) {
         try {
             Thread.sleep((long) millis);
         } catch (InterruptedException e) {
@@ -140,16 +140,16 @@ public class Helper {
     }
 
     /**
-     * Maps a given {@code double} value from one range to another.
+     * Maps a given {@code float} value from one range to another.
      * 
      * @param value
      * @param start1
      * @param stop1
      * @param start2
      * @param stop2
-     * @return double
+     * @return float
      */
-    public static double map(double value, double start1, double stop1, double start2, double stop2) {
+    public static float map(float value, float start1, float stop1, float start2, float stop2) {
         return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
     }
 
@@ -164,7 +164,7 @@ public class Helper {
      * @return int
      */
     public static int map(int value, int start1, int stop1, int start2, int stop2) {
-        return (int) map((double) value, (double) start1, (double) stop1, (double) start2, (double) stop2);
+        return (int) map((float) value, (float) start1, (float) stop1, (float) start2, (float) stop2);
     }
 
     /**
@@ -262,15 +262,15 @@ public class Helper {
     }
 
     /**
-     * Returns true if the given {@code double[]} array contains the given
-     * {@code double} element.
+     * Returns true if the given {@code float[]} array contains the given
+     * {@code float} element.
      * 
      * @param arr
      * @param element
      * @return boolean
      */
-    public static boolean contains(double[] arr, double element) {
-        for (double d : arr) {
+    public static boolean contains(float[] arr, float element) {
+        for (float d : arr) {
             if (d == element)
                 return true;
         }
@@ -333,9 +333,9 @@ public class Helper {
     }
 
     /**
-     * Returns a constrained {@code double} value.
+     * Returns a constrained {@code float} value.
      */
-    public static double constrain(double value, double min, double max) {
+    public static float constrain(float value, float min, float max) {
         if (value < min)
             return min;
         if (value > max)
@@ -355,15 +355,15 @@ public class Helper {
     }
 
     /**
-     * Lerps between two {@code double} values.
+     * Lerps between two {@code float} values.
      * 
      * @param start
      * @param stop
      * @param amt
      * 
-     * @return double
+     * @return float
      */
-    public static double lerp(double start, double stop, double amt) {
+    public static float lerp(float start, float stop, float amt) {
         return start + (stop - start) * amt;
     }
 
@@ -374,48 +374,161 @@ public class Helper {
      * @param min
      * @param max
      * 
-     * @return double
+     * @return float
      */
-    public static double norm(double value, double min, double max) {
+    public static float norm(float value, float min, float max) {
         return (value - min) / (max - min);
     }
 
     /**
-     * Returns a smooth {@code double} value between -1 and 1 given a {@code double}
-     * x and {@code double} y.
+     * Returns a smooth {@code float} value between -1 and 1 given a {@code float}
+     * x and {@code float} y.
      * 
      * @param x
      * @param y
-     * @return double
+     * @return float
      */
-    public static double perlinNoise(double x, double y) {
-        return PerlinNoise.noise(x, y);
+    public static float perlinNoise(float x, float y) {
+        return (float) PerlinNoise.noise(x, y);
     }
 
     /**
-     * Returns a smooth {@code double} value between -1 and 1 given a {@code double}
-     * x, {@code double} y, and {@code double} z.
+     * Returns a smooth {@code float} value between -1 and 1 given a {@code float}
+     * x, {@code float} y, and {@code float} z.
      * 
      * @param x
      * @param y
      * @param z
-     * @return double
+     * @return float
      */
-    public static double perlinNoise(double x, double y, double z) {
-        return PerlinNoise.noise(x, y, z);
+    public static float perlinNoise(float x, float y, float z) {
+        return (float) PerlinNoise.noise(x, y, z);
     }
 
     /**
-     * Returns a smooth {@code double} value between -1 and 1 given a {@code double}
-     * x, {@code double} y, {@code double} z, and {@code double} w.
+     * Returns a smooth {@code float} value between -1 and 1 given a {@code float}
+     * x, {@code float} y, {@code float} z, and {@code float} w.
      * 
      * @param x
      * @param y
      * @param z
      * @param w
-     * @return double
+     * @return float
      */
-    public static double perlinNoise(double x, double y, double z, double w) {
-        return PerlinNoise.noise(x, y, z, w);
+    public static float perlinNoise(float x, float y, float z, float w) {
+        return (float) PerlinNoise.noise(x, y, z, w);
+    }
+
+    // Math Functions
+    /**
+     * Returns the absolute value of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float abs(float value) {
+        return Math.abs(value);
+    }
+
+    /**
+     * Returns the absolute value of the given {@code int} value.
+     * 
+     * @param value
+     * @return int
+     */
+    public static int abs(int value) {
+        return Math.abs(value);
+    }
+
+    /**
+     * Returns the cosine of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float cos(float value) {
+        return (float) Math.cos(value);
+    }
+
+    /**
+     * Returns the sine of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float sin(float value) {
+        return (float) Math.sin(value);
+    }
+
+    /**
+     * Returns the tangent of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float tan(float value) {
+        return (float) Math.tan(value);
+    }
+
+    /**
+     * Returns the arc cosine of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float acos(float value) {
+        return (float) Math.acos(value);
+    }
+
+    /**
+     * Returns the arc sine of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float asin(float value) {
+        return (float) Math.asin(value);
+    }
+
+    /**
+     * Returns the arc tangent of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float atan(float value) {
+        return (float) Math.atan(value);
+    }
+
+    /**
+     * Returns the arc tangent of the given {@code float} y and {@code float} x.
+     * 
+     * @param y
+     * @param x
+     * @return float
+     */
+    public static float atan2(float y, float x) {
+        return (float) Math.atan2(y, x);
+    }
+
+    /**
+     * Returns the square root of the given {@code float} value.
+     * 
+     * @param value
+     * @return float
+     */
+    public static float sqrt(float value) {
+        return (float) Math.sqrt(value);
+    }
+
+    /**
+     * Returns the given {@code float} value raised to the given {@code float}
+     * 
+     * @param value
+     * @param power
+     * @return float
+     */
+    public static float pow(float value, float power) {
+        return (float) Math.pow(value, power);
     }
 }

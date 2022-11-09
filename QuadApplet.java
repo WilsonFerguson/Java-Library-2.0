@@ -2,13 +2,13 @@ import java.awt.Color;
 
 public class QuadApplet extends AppletComponent {
 
-    public double x1, y1, x2, y2, x3, y3, x4, y4;
+    public float x1, y1, x2, y2, x3, y3, x4, y4;
     public Color strokeColor;
     public Color fillColor;
-    public double strokeWeight;
+    public float strokeWeight;
 
-    public QuadApplet(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4,
-            Color strokeColor, Color fillColor, double strokeWeight, double rotate, Point translate, double scale) {
+    public QuadApplet(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
+            Color strokeColor, Color fillColor, float strokeWeight, float rotate, Point translate, float scale) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;

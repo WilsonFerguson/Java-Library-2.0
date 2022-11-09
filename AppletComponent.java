@@ -1,5 +1,5 @@
 public class AppletComponent {
 
-    public double rotate, scale;
+    public float rotate, scale;
     public Point translate;
 }

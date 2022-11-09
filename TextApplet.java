@@ -3,14 +3,14 @@ import java.awt.Color;
 public class TextApplet extends AppletComponent {
 
     public String text;
-    public double x, y;
+    public float x, y;
     public Color color;
-    public double size;
+    public float size;
     public int alignment;
     public String font;
 
-    public TextApplet(String text, double x, double y, Color color, double size, int alignment, String font,
-            double rotate, Point translate, double scale) {
+    public TextApplet(String text, float x, float y, Color color, float size, int alignment, String font,
+            float rotate, Point translate, float scale) {
         this.text = text;
         this.x = x;
         this.y = y;

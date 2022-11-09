@@ -6,11 +6,11 @@ public class ShapeApplet extends AppletComponent {
     public ArrayList<Point> points = new ArrayList<Point>();
     public Color strokeColor;
     public Color fillColor;
-    public double strokeWeight;
+    public float strokeWeight;
     public int mode;
 
-    public ShapeApplet(Color strokeColor, Color fillColor, double rotate, Point translate, double scale,
-            double strokeWeight, int mode) {
+    public ShapeApplet(Color strokeColor, Color fillColor, float rotate, Point translate, float scale,
+            float strokeWeight, int mode) {
         this.strokeColor = strokeColor;
         this.fillColor = fillColor;
         this.rotate = rotate;
@@ -24,7 +24,7 @@ public class ShapeApplet extends AppletComponent {
         points.add(point);
     }
 
-    public void addPoint(double x, double y) {
+    public void addPoint(float x, float y) {
         points.add(new Point(x, y));
     }
 

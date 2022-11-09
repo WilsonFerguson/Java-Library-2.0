@@ -2,15 +2,15 @@ import java.awt.Color;
 
 public class RectApplet extends AppletComponent {
 
-    public double x, y, w, h;
+    public float x, y, w, h;
     public Color strokeColor;
     public Color fillColor;
     public int alignment;
-    public double strokeWeight;
-    public double roundness;
+    public float strokeWeight;
+    public float roundness;
 
-    public RectApplet(double x, double y, double w, double h, Color strokeColor, Color fillColor, int alignment,
-            double strokeWeight, double roundness, double rotate, Point translate, double scale) {
+    public RectApplet(float x, float y, float w, float h, Color strokeColor, Color fillColor, int alignment,
+            float strokeWeight, float roundness, float rotate, Point translate, float scale) {
         this.x = x;
         this.y = y;
         this.w = w;

@@ -2,13 +2,13 @@ import java.awt.Color;
 
 public class TriangleApplet extends AppletComponent {
 
-    public double x1, y1, x2, y2, x3, y3;
+    public float x1, y1, x2, y2, x3, y3;
     public Color strokeColor;
     public Color fillColor;
-    public double strokeWeight;
+    public float strokeWeight;
 
-    public TriangleApplet(double x1, double y1, double x2, double y2, double x3, double y3, Color strokeColor,
-            Color fillColor, double strokeWeight, double rotate, Point translate, double scale) {
+    public TriangleApplet(float x1, float y1, float x2, float y2, float x3, float y3, Color strokeColor,
+            Color fillColor, float strokeWeight, float rotate, Point translate, float scale) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;

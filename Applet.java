@@ -35,19 +35,19 @@ public class Applet extends JPanel {
     private Color strokeColor = Color.BLACK;
     private Color backgroundColor = Color.WHITE;
 
-    private double strokeWeight = 1;
-    private double textSize = 12;
+    private float strokeWeight = 1;
+    private float textSize = 12;
     private String textFont = "Arial";
 
-    private double rotation = 0;
+    private float rotation = 0;
     private Point translation = Point.zero();
-    private double scale = 1;
+    private float scale = 1;
 
-    public double mouseX = 0;
-    public double mouseY = 0;
+    public float mouseX = 0;
+    public float mouseY = 0;
     public Point mouse = Point.zero();
-    public double pmouseX = 0;
-    public double pmouseY = 0;
+    public float pmouseX = 0;
+    public float pmouseY = 0;
     public Point pmouse = Point.zero();
 
     public int width;
@@ -66,11 +66,11 @@ public class Applet extends JPanel {
     private boolean drawBackground = false;
 
     // Constants
-    public final double PI = Math.PI;
-    public final double HALF_PI = Math.PI / 2;
-    public final double QUARTER_PI = Math.PI / 4;
-    public final double TWO_PI = Math.PI * 2;
-    public final double TAU = Math.PI * 2;
+    public final float PI = (float) Math.PI;
+    public final float HALF_PI = (float) Math.PI / 2;
+    public final float QUARTER_PI = (float) Math.PI / 4;
+    public final float TWO_PI = (float) Math.PI * 2;
+    public final float TAU = (float) Math.PI * 2;
 
     // Shape
     private ShapeApplet shape;
@@ -78,24 +78,20 @@ public class Applet extends JPanel {
     public final int RIGID = 2;
     public final int CLOSE = 0;
 
-    // Pixels
-    private BufferedImage image;
-    public int[] pixels;
-
     // FPS
     private double targetFrameRate = 60;
     private ArrayList<Double> frameRates = new ArrayList<Double>();
-    public double frameRate = 0;
+    public float frameRate = 0;
     private double lastTime = 0;
     public int frameCount = 0;
     private boolean displayFrameRate = false;
     private double startTime = 0;
 
     // Random noise offsets
-    private double noiseXOffset = 0;
-    private double noiseYOffset = 0;
-    private double noiseZOffset = 0;
-    private double noiseWOffset = 0;
+    private float noiseXOffset = 0;
+    private float noiseYOffset = 0;
+    private float noiseZOffset = 0;
+    private float noiseWOffset = 0;
 
     private boolean aliasing = false;
 
@@ -103,7 +99,7 @@ public class Applet extends JPanel {
 
     private boolean fullScreen = false;
 
-    public void size(double width, double height) {
+    public void size(int width, int height) {
         Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
         displayWidth = (int) displaySize.getWidth();
         displayHeight = (int) displaySize.getHeight();
@@ -129,15 +125,12 @@ public class Applet extends JPanel {
 
         addListeners();
 
-        noiseXOffset = Math.random() * 1000;
-        noiseYOffset = Math.random() * 1000;
-        noiseZOffset = Math.random() * 1000;
-        noiseWOffset = Math.random() * 1000;
+        noiseXOffset = Helper.random(1000.0f);
+        noiseYOffset = Helper.random(1000.0f);
+        noiseZOffset = Helper.random(1000.0f);
+        noiseWOffset = Helper.random(1000.0f);
 
         frame.setVisible(true);
-
-        pixels = new int[(int) (width * height)];
-        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
     }
 
     /**
@@ -170,18 +163,15 @@ public class Applet extends JPanel {
 
         addListeners();
 
-        noiseXOffset = Math.random() * 1000;
-        noiseYOffset = Math.random() * 1000;
-        noiseZOffset = Math.random() * 1000;
-        noiseWOffset = Math.random() * 1000;
+        noiseXOffset = Helper.random(1000.0f);
+        noiseYOffset = Helper.random(1000.0f);
+        noiseZOffset = Helper.random(1000.0f);
+        noiseWOffset = Helper.random(1000.0f);
 
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
         fullScreen = true;
-
-        pixels = new int[(int) (width * height)];
-        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
     }
 
     public JFrame getFrame() {
@@ -269,6 +259,124 @@ public class Applet extends JPanel {
         });
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return new Dimension(width, height);
+    }
+
+    public void setup() {
+        // Empty
+    }
+
+    public void draw() {
+        // Empty
+    }
+
+    public void aliasing() {
+        aliasing = true;
+    }
+
+    public void backendUpdate() {
+        double nextFrameRate = 1000.0 / (millis() - lastTime);
+        if (frameRates.size() < 10) {
+            frameRates.add(nextFrameRate);
+        } else {
+            frameRates.remove(0);
+            frameRates.add(nextFrameRate);
+        }
+        frameRate = 0;
+        for (double frameRate : frameRates) {
+            this.frameRate += frameRate;
+        }
+        this.frameRate /= frameRates.size();
+        lastTime = millis();
+        frameCount++;
+
+        // Cap frame rate
+        try {
+            Thread.sleep((long) (1000.0 / targetFrameRate));
+        } catch (Exception e) {
+            // Empty
+        }
+
+        // Update mouse
+        pmouseX = mouseX;
+        pmouseY = mouseY;
+        pmouse = mouse.copy();
+
+        // repaint(); // Calling repaint() causes a lot of lag, so we'll just call
+        // paint() instead
+        // paintComponent(getGraphics()); // Kinda hacky, but it works
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    SwingUtilities.updateComponentTreeUI(frame);
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        rotation = 0;
+        translation = Point.zero();
+        scale = 1;
+
+        displayFrameRate = false;
+        drawBackground = false;
+    }
+
+    public void exitOnEscape(boolean exitOnEscape) {
+        this.exitOnEscape = exitOnEscape;
+    }
+
+    public void frameRate(float targetFrameRate) {
+        this.targetFrameRate = targetFrameRate;
+    }
+
+    public void displayFrameRate() {
+        displayFrameRate = true;
+    }
+
+    public void println(Object... args) {
+        Helper.println(args);
+    }
+
+    public void background(Color color) {
+        backgroundColor = color;
+        drawBackground = true;
+        frame.setBackground(color);
+    }
+
+    public void background(float r, float g, float b, float a) {
+        r = Helper.constrain(r, 0, 255);
+        g = Helper.constrain(g, 0, 255);
+        b = Helper.constrain(b, 0, 255);
+        a = Helper.constrain(a, 0, 255);
+        background(new Color((int) r, (int) g, (int) b, (int) a));
+    }
+
+    public void background(float r, float g, float b) {
+        background(r, g, b, 255);
+    }
+
+    public void background(float gray, float a) {
+        background(gray, gray, gray, a);
+    }
+
+    public void background(float gray) {
+        background(gray, 255);
+    }
+
     // Mouse inputs (protected so that they can be overridden)
     protected void mousePress() {
         mousePressed();
@@ -349,125 +457,6 @@ public class Applet extends JPanel {
 
     }
 
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(width, height);
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(width, height);
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-        return new Dimension(width, height);
-    }
-
-    public void setup() {
-        // Empty
-    }
-
-    public void draw() {
-        // Empty
-    }
-
-    public void aliasing() {
-        aliasing = true;
-    }
-
-    public void backendUpdate() {
-        double nextFrameRate = 1000.0 / (millis() - lastTime);
-        if (frameRates.size() < 10) {
-            frameRates.add(nextFrameRate);
-        } else {
-            frameRates.remove(0);
-            frameRates.add(nextFrameRate);
-        }
-        frameRate = 0;
-        for (double frameRate : frameRates) {
-            this.frameRate += frameRate;
-        }
-        this.frameRate /= frameRates.size();
-        lastTime = millis();
-        frameCount++;
-
-        // Cap frame rate
-        try {
-            Thread.sleep((long) (1000.0 / targetFrameRate));
-        } catch (Exception e) {
-            // Empty
-        }
-
-        // Update mouse
-        pmouseX = mouseX;
-        pmouseY = mouseY;
-        pmouse = mouse.copy();
-
-        // repaint(); // Calling repaint() causes le flickering
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    SwingUtilities.updateComponentTreeUI(frame); // This is the magic
-                }
-            });
-        } catch (InvocationTargetException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        rotation = 0;
-        translation = Point.zero();
-        scale = 1;
-
-        pixels = new int[(int) (width * height)];
-        image = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
-
-        displayFrameRate = false;
-        drawBackground = false;
-    }
-
-    public void exitOnEscape(boolean exitOnEscape) {
-        this.exitOnEscape = exitOnEscape;
-    }
-
-    public void frameRate(double targetFrameRate) {
-        this.targetFrameRate = targetFrameRate;
-    }
-
-    public void displayFrameRate() {
-        displayFrameRate = true;
-    }
-
-    public void println(Object... args) {
-        Helper.println(args);
-    }
-
-    public void background(Color color) {
-        backgroundColor = color;
-        drawBackground = true;
-        frame.setBackground(color);
-    }
-
-    public void background(double r, double g, double b, double a) {
-        r = Helper.constrain(r, 0, 255);
-        g = Helper.constrain(g, 0, 255);
-        b = Helper.constrain(b, 0, 255);
-        a = Helper.constrain(a, 0, 255);
-        background(new Color((int) r, (int) g, (int) b, (int) a));
-    }
-
-    public void background(double r, double g, double b) {
-        background(r, g, b, 255);
-    }
-
-    public void background(double gray, double a) {
-        background(gray, gray, gray, a);
-    }
-
-    public void background(double gray) {
-        background(gray, 255);
-    }
-
     // Drawing Modes
     public void rectMode(int mode) {
         rectMode = mode;
@@ -482,7 +471,7 @@ public class Applet extends JPanel {
         fillColor = color;
     }
 
-    public void fill(double r, double g, double b, double a) {
+    public void fill(float r, float g, float b, float a) {
         r = Helper.constrain(r, 0, 255);
         g = Helper.constrain(g, 0, 255);
         b = Helper.constrain(b, 0, 255);
@@ -490,15 +479,15 @@ public class Applet extends JPanel {
         fill(new Color((int) r, (int) g, (int) b, (int) a));
     }
 
-    public void fill(double r, double g, double b) {
+    public void fill(float r, float g, float b) {
         fill(r, g, b, 255);
     }
 
-    public void fill(double gray, double a) {
+    public void fill(float gray, float a) {
         fill(gray, gray, gray, a);
     }
 
-    public void fill(double gray) {
+    public void fill(float gray) {
         fill(gray, gray, gray);
     }
 
@@ -511,7 +500,7 @@ public class Applet extends JPanel {
         strokeColor = color;
     }
 
-    public void stroke(double r, double g, double b, double a) {
+    public void stroke(float r, float g, float b, float a) {
         r = Helper.constrain(r, 0, 255);
         g = Helper.constrain(g, 0, 255);
         b = Helper.constrain(b, 0, 255);
@@ -519,15 +508,15 @@ public class Applet extends JPanel {
         stroke(new Color((int) r, (int) g, (int) b, (int) a));
     }
 
-    public void stroke(double r, double g, double b) {
+    public void stroke(float r, float g, float b) {
         stroke(r, g, b, 255);
     }
 
-    public void stroke(double gray, double a) {
+    public void stroke(float gray, float a) {
         stroke(gray, gray, gray, a);
     }
 
-    public void stroke(double gray) {
+    public void stroke(float gray) {
         stroke(gray, gray, gray);
     }
 
@@ -536,12 +525,12 @@ public class Applet extends JPanel {
     }
 
     // Stroke Weight
-    public void strokeWeight(double weight) {
+    public void strokeWeight(float weight) {
         strokeWeight = Helper.constrain(weight, 0, weight);
     }
 
     // Text Size
-    public void textSize(double size) {
+    public void textSize(float size) {
         textSize = Helper.constrain(size, 0, size);
     }
 
@@ -556,7 +545,7 @@ public class Applet extends JPanel {
     }
 
     // Transformations
-    public void translate(double x, double y) {
+    public void translate(float x, float y) {
         translation = new Point(x, y);
     }
 
@@ -564,30 +553,30 @@ public class Applet extends JPanel {
         translation = p.copy();
     }
 
-    public void rotate(double angle) {
+    public void rotate(float angle) {
         rotation = angle;
     }
 
-    public void scale(double scalar) {
+    public void scale(float scalar) {
         scale = scalar;
     }
 
     // Returns the width of the text
-    public double textWidth(String text) {
+    public int textWidth(String text) {
         return frame.getGraphics().getFontMetrics().stringWidth(text);
     }
 
     // Returns the height of the text
-    public double textHeight(String text) {
+    public int textHeight(String text) {
         return frame.getGraphics().getFontMetrics().getHeight();
     }
 
     // Ellipse
     public void drawEllipse(EllipseApplet ellipse) {
-        double x = ellipse.x;
-        double y = ellipse.y;
-        double w = ellipse.w;
-        double h = ellipse.h;
+        float x = ellipse.x;
+        float y = ellipse.y;
+        float w = ellipse.w;
+        float h = ellipse.h;
         if (ellipse.alignment == CENTER) {
             x -= w / 2;
             y -= h / 2;
@@ -602,18 +591,18 @@ public class Applet extends JPanel {
         g2d.fill(new Ellipse2D.Double(x, y, w, h));
         // Stroke
         g2d.setColor(ellipse.strokeColor);
-        g2d.setStroke(new BasicStroke((float) ellipse.strokeWeight));
+        g2d.setStroke(new BasicStroke(ellipse.strokeWeight));
         g2d.draw(new Ellipse2D.Double(x, y, w, h));
     }
 
-    public void ellipse(double x, double y, double w, double h) {
+    public void ellipse(float x, float y, float w, float h) {
         EllipseApplet ellipse = new EllipseApplet(x, y, w, h, strokeColor, fillColor, ellipseMode, strokeWeight,
                 rotation,
                 translation, scale);
         components.add(ellipse);
     }
 
-    public void ellipse(Point p, double w, double h) {
+    public void ellipse(Point p, float w, float h) {
         ellipse(p.x, p.y, w, h);
     }
 
@@ -622,32 +611,33 @@ public class Applet extends JPanel {
     }
 
     // Circle
-    public void circle(double x, double y, double r) {
+    public void circle(float x, float y, float r) {
         ellipse(x, y, r, r);
     }
 
-    public void circle(Point p, double r) {
+    public void circle(Point p, float r) {
         ellipse(p.x, p.y, r, r);
     }
 
     // Line
     public void drawLine(LineApplet line) {
-        double x1 = line.x1;
-        double y1 = line.y1;
-        double x2 = line.x2;
-        double y2 = line.y2;
+        float x1 = line.x1;
+        float y1 = line.y1;
+        float x2 = line.x2;
+        float y2 = line.y2;
 
         g2d.translate(line.translate.x, line.translate.y);
         g2d.scale(line.scale, line.scale);
         g2d.rotate(line.rotate);
 
         g2d.setColor(line.color);
-        g2d.setStroke(new BasicStroke((float) line.strokeWeight));
+        g2d.setStroke(new BasicStroke(line.strokeWeight));
         g2d.draw(new Line2D.Double(x1, y1, x2, y2));
     }
 
-    public void line(double x1, double y1, double x2, double y2) {
-        LineApplet line = new LineApplet(x1, y1, x2, y2, strokeColor, strokeWeight, rotation, translation, scale);
+    public void line(float x1, float y1, float x2, float y2) {
+        LineApplet line = new LineApplet(x1, y1, x2, y2, strokeColor, strokeWeight, rotation,
+                translation, scale);
         components.add(line);
     }
 
@@ -656,7 +646,7 @@ public class Applet extends JPanel {
     }
 
     // Point
-    public void point(double x, double y) {
+    public void point(float x, float y) {
         line(x, y, x, y);
     }
 
@@ -666,14 +656,14 @@ public class Applet extends JPanel {
 
     // Quad
     public void drawQuad(QuadApplet quad) {
-        double x1 = quad.x1;
-        double y1 = quad.y1;
-        double x2 = quad.x2;
-        double y2 = quad.y2;
-        double x3 = quad.x3;
-        double y3 = quad.y3;
-        double x4 = quad.x4;
-        double y4 = quad.y4;
+        float x1 = quad.x1;
+        float y1 = quad.y1;
+        float x2 = quad.x2;
+        float y2 = quad.y2;
+        float x3 = quad.x3;
+        float y3 = quad.y3;
+        float x4 = quad.x4;
+        float y4 = quad.y4;
 
         g2d.translate(quad.translate.x, quad.translate.y);
         g2d.scale(quad.scale, quad.scale);
@@ -685,13 +675,14 @@ public class Applet extends JPanel {
                 new int[] { (int) y1, (int) y2, (int) y3, (int) y4 }, 4);
         // Stroke
         g2d.setColor(quad.strokeColor);
-        g2d.setStroke(new BasicStroke((float) quad.strokeWeight));
+        g2d.setStroke(new BasicStroke(quad.strokeWeight));
         g2d.drawPolygon(new int[] { (int) x1, (int) x2, (int) x3, (int) x4 },
                 new int[] { (int) y1, (int) y2, (int) y3, (int) y4 }, 4);
     }
 
-    public void quad(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
-        QuadApplet quad = new QuadApplet(x1, y1, x2, y2, x3, y3, x4, y4, strokeColor, fillColor, strokeWeight, rotation,
+    public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        QuadApplet quad = new QuadApplet(x1, y1, x2, y2, x3, y3, x4, y4, strokeColor, fillColor, strokeWeight,
+                rotation,
                 translation, scale);
         components.add(quad);
     }
@@ -702,10 +693,10 @@ public class Applet extends JPanel {
 
     // Rect
     public void drawRect(RectApplet rect) {
-        double x = rect.x;
-        double y = rect.y;
-        double w = rect.w;
-        double h = rect.h;
+        float x = rect.x;
+        float y = rect.y;
+        float w = rect.w;
+        float h = rect.h;
 
         if (rect.alignment == CENTER) {
             x -= w / 2;
@@ -721,31 +712,35 @@ public class Applet extends JPanel {
         g2d.fill(new RoundRectangle2D.Double(x, y, w, h, rect.roundness, rect.roundness));
         // Stroke
         g2d.setColor(rect.strokeColor);
-        g2d.setStroke(new BasicStroke((float) rect.strokeWeight));
+        g2d.setStroke(new BasicStroke(rect.strokeWeight));
         g2d.draw(new RoundRectangle2D.Double(x, y, w, h, rect.roundness, rect.roundness));
     }
 
-    public void rect(double x, double y, double w, double h, double r) {
-        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, r, rotation,
+    public void rect(float x, float y, float w, float h, float r) {
+        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode,
+                strokeWeight, r,
+                rotation,
                 translation, scale);
         components.add(rect);
     }
 
-    public void rect(double x, double y, double w, double h) {
-        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode, strokeWeight, 1, rotation,
+    public void rect(float x, float y, float w, float h) {
+        RectApplet rect = new RectApplet(x, y, w, h, strokeColor, fillColor, rectMode,
+                strokeWeight, 1,
+                rotation,
                 translation, scale);
         components.add(rect);
     }
 
-    public void rect(Point p, double w, double h, double r) {
+    public void rect(Point p, float w, float h, float r) {
         rect(p.x, p.y, w, h, r);
     }
 
-    public void rect(Point p, double w, double h) {
+    public void rect(Point p, float w, float h) {
         rect(p.x, p.y, w, h);
     }
 
-    public void rect(Point p, Point s, double r) {
+    public void rect(Point p, Point s, float r) {
         rect(p.x, p.y, s.x, s.y, r);
     }
 
@@ -754,22 +749,22 @@ public class Applet extends JPanel {
     }
 
     // Square
-    public void square(double x, double y, double s) {
+    public void square(float x, float y, float s) {
         rect(x, y, s, s);
     }
 
-    public void square(Point p, double s) {
+    public void square(Point p, float s) {
         square(p.x, p.y, s);
     }
 
     // Triangle
     public void drawTriangle(TriangleApplet triangle) {
-        double x1 = triangle.x1;
-        double y1 = triangle.y1;
-        double x2 = triangle.x2;
-        double y2 = triangle.y2;
-        double x3 = triangle.x3;
-        double y3 = triangle.y3;
+        float x1 = triangle.x1;
+        float y1 = triangle.y1;
+        float x2 = triangle.x2;
+        float y2 = triangle.y2;
+        float x3 = triangle.x3;
+        float y3 = triangle.y3;
 
         g2d.translate(triangle.translate.x, triangle.translate.y);
         g2d.scale(triangle.scale, triangle.scale);
@@ -781,13 +776,14 @@ public class Applet extends JPanel {
                 new int[] { (int) y1, (int) y2, (int) y3 }, 3);
         // Stroke
         g2d.setColor(triangle.strokeColor);
-        g2d.setStroke(new BasicStroke((float) triangle.strokeWeight));
+        g2d.setStroke(new BasicStroke(triangle.strokeWeight));
         g2d.drawPolygon(new int[] { (int) x1, (int) x2, (int) x3 },
                 new int[] { (int) y1, (int) y2, (int) y3 }, 3);
     }
 
-    public void triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
-        TriangleApplet triangle = new TriangleApplet(x1, y1, x2, y2, x3, y3, strokeColor, fillColor, strokeWeight,
+    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
+        TriangleApplet triangle = new TriangleApplet(x1, y1, x2, y2, x3, y3, strokeColor, fillColor,
+                strokeWeight,
                 rotation, translation, scale);
         components.add(triangle);
     }
@@ -799,12 +795,12 @@ public class Applet extends JPanel {
     // Text
     public void drawText(TextApplet text) {
         String t = text.text;
-        double x = text.x;
-        double y = text.y;
+        float x = text.x;
+        float y = text.y;
 
         g2d.setFont(new Font(text.font, Font.PLAIN, (int) text.size));
-        double w = g2d.getFontMetrics().stringWidth(t);
-        double h = g2d.getFontMetrics().getHeight();
+        int w = g2d.getFontMetrics().stringWidth(t);
+        int h = g2d.getFontMetrics().getHeight();
 
         if (text.alignment == CENTER) {
             x -= w / 2;
@@ -821,13 +817,15 @@ public class Applet extends JPanel {
         g2d.drawString(t, (int) x, (int) y);
     }
 
-    public void text(String text, double x, double y) {
-        TextApplet textApplet = new TextApplet(text, x, y, fillColor, textSize, textAlign, textFont, rotation,
+    public void text(String text, float x, float y) {
+        TextApplet textApplet = new TextApplet(text, x, y, fillColor,
+                textSize, textAlign, textFont,
+                rotation,
                 translation, scale);
         components.add(textApplet);
     }
 
-    public void text(Object text, double x, double y) {
+    public void text(Object text, float x, float y) {
         text(text.toString(), x, y);
     }
 
@@ -850,7 +848,7 @@ public class Applet extends JPanel {
             int[] yPoints = new int[shape.points.size()];
 
             g2d.setColor(shape.strokeColor);
-            g2d.setStroke(new BasicStroke((float) shape.strokeWeight));
+            g2d.setStroke(new BasicStroke(shape.strokeWeight));
             for (int i = 0; i < shape.points.size() - 1; i++) {
                 Point p1 = shape.points.get(i);
                 Point p2 = shape.points.get(i + 1);
@@ -870,7 +868,7 @@ public class Applet extends JPanel {
             // Catmull-Rom splines smoothing algorithm
 
             g2d.setColor(shape.strokeColor);
-            g2d.setStroke(new BasicStroke((float) shape.strokeWeight));
+            g2d.setStroke(new BasicStroke(shape.strokeWeight));
 
             ArrayList<Integer> xPoints = new ArrayList<Integer>();
             ArrayList<Integer> yPoints = new ArrayList<Integer>();
@@ -912,11 +910,15 @@ public class Applet extends JPanel {
     }
 
     public void beginShape() {
-        shape = new ShapeApplet(strokeColor, fillColor, rotation, translation, scale, strokeWeight, RIGID);
+        shape = new ShapeApplet(strokeColor, fillColor,
+                rotation, translation,
+                scale, strokeWeight, RIGID);
     }
 
     public void beginShape(int mode) {
-        shape = new ShapeApplet(strokeColor, fillColor, rotation, translation, scale, strokeWeight, mode);
+        shape = new ShapeApplet(strokeColor, fillColor,
+                rotation, translation, scale,
+                strokeWeight, mode);
     }
 
     public void endShape() {
@@ -931,40 +933,13 @@ public class Applet extends JPanel {
         endShape();
     }
 
-    public void vertex(double x, double y) {
+    public void vertex(float x, float y) {
         if (shape != null)
             shape.addPoint(x, y);
     }
 
     public void vertex(Point p) {
         vertex(p.x, p.y);
-    }
-
-    // Pixels
-    public Color get(int x, int y) {
-        return new Color(image.getRGB(x, y));
-    }
-
-    public void set(int x, int y, int color) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            pixels[x + y * width] = color;
-        }
-    }
-
-    public void updatePixels() {
-        for (int i = 0; i < pixels.length; i++) {
-            int x = i % width;
-            int y = i / width;
-            image.setRGB(x, y, pixels[i]);
-        }
-    }
-
-    public void loadPixels() {
-        for (int i = 0; i < pixels.length; i++) {
-            int x = i % width;
-            int y = i / width;
-            pixels[i] = image.getRGB(x, y);
-        }
     }
 
     private void drawSpecificShape(AppletComponent component) {
@@ -1002,7 +977,6 @@ public class Applet extends JPanel {
             g2d.fillRect(0, 0, width, height);
             g2d.setColor(prevColor);
         }
-
         for (int i = 0; i < components.size(); i++) {
             drawSpecificShape(components.get(i));
         }
@@ -1014,14 +988,14 @@ public class Applet extends JPanel {
             rectMode(CORNER);
             int textA = textAlign;
             textAlign(LEFT);
-            double textS = textSize;
+            float textS = textSize;
             g2d.setFont(new Font("Arial", Font.PLAIN, 12));
 
             Color prevColor = g2d.getColor();
 
-            String fps = "FPS: " + Helper.roundString(frameRate, 0);
+            String fps = "FPS: " + Helper.roundString((float) frameRate, 0);
 
-            double wid = textWidth(fps);
+            int wid = textWidth(fps);
 
             g2d.setColor(new Color(0, 0, 0, 100));
             g2d.fillRect(width - (int) wid - 10, 0, (int) wid + 10, 20);
@@ -1035,9 +1009,6 @@ public class Applet extends JPanel {
             textAlign(textA);
             textSize(textS);
         }
-
-        // Draw pixels
-        g2d.drawImage(image, 0, 0, null);
     }
 
     public void delay(int millis) {
@@ -1209,168 +1180,160 @@ public class Applet extends JPanel {
         return Math.abs(n);
     }
 
-    public double abs(double n) {
-        return Math.abs(n);
-    }
-
     public int ceil(float n) {
         return (int) Math.ceil(n);
     }
 
-    public int ceil(double n) {
-        return (int) Math.ceil(n);
-    }
-
-    public double constrain(double value, double min, double max) {
-        return Helper.constrain(value, min, max);
-    }
-
-    public double dist(double x1, double y1, double x2, double y2) {
-        return Point.dist(x1, y1, x2, y2);
-    }
-
-    public double dist(Point p1, Point p2) {
-        return Point.dist(p1, p2);
-    }
-
-    public double exp(double n) {
-        return Math.exp(n);
-    }
-
-    public int floor(double n) {
+    public int floor(float n) {
         return (int) Math.floor(n);
     }
 
-    public double lerp(double start, double stop, double amt) {
+    public float constrain(float value, float min, float max) {
+        return Helper.constrain(value, min, max);
+    }
+
+    public float dist(float x1, float y1, float x2, float y2) {
+        return Point.dist(x1, y1, x2, y2);
+    }
+
+    public float dist(Point p1, Point p2) {
+        return Point.dist(p1, p2);
+    }
+
+    public float exp(float n) {
+        return (float) Math.exp(n);
+    }
+
+    public float lerp(float start, float stop, float amt) {
         return Helper.lerp(start, stop, amt);
     }
 
-    public double ln(double n) {
-        return Math.log(n);
+    public float ln(float n) {
+        return (float) Math.log(n);
     }
 
-    public double log(double n) {
-        return Math.log10(n);
+    public float log(float n) {
+        return (float) Math.log10(n);
     }
 
-    public double mag(double a, double b) {
-        return Math.sqrt(a * a + b * b);
+    public float mag(float a, float b) {
+        return (float) Math.sqrt(a * a + b * b);
     }
 
-    public double map(double value, double min1, double max1, double min2, double max2) {
+    public float map(float value, float min1, float max1, float min2, float max2) {
         return Helper.map(value, min1, max1, min2, max2);
     }
 
-    public double max(double n1, double n2) {
+    public float max(float n1, float n2) {
         return Math.max(n1, n2);
     }
 
-    public double min(double n1, double n2) {
+    public float min(float n1, float n2) {
         return Math.min(n1, n2);
     }
 
-    public double norm(double value, double min, double max) {
+    public float norm(float value, float min, float max) {
         return Helper.norm(value, min, max);
     }
 
-    public double pow(double n, double e) {
-        return Math.pow(n, e);
+    public float pow(float n, float e) {
+        return Helper.pow(n, e);
     }
 
-    public int round(double n) {
+    public int round(float n) {
         return (int) Math.round(n);
     }
 
-    public double sq(double n) {
+    public float sq(float n) {
         return n * n;
     }
 
-    public double sqrt(double n) {
-        return Math.sqrt(n);
+    public float sqrt(float n) {
+        return Helper.sqrt(n);
     }
 
     // Trigonometry Functions
-    public double acos(double n) {
-        return Math.acos(n);
+    public float acos(float n) {
+        return Helper.acos(n);
     }
 
-    public double asin(double n) {
-        return Math.asin(n);
+    public float asin(float n) {
+        return Helper.asin(n);
     }
 
-    public double atan(double n) {
-        return Math.atan(n);
+    public float atan(float n) {
+        return Helper.atan(n);
     }
 
-    public double atan2(double y, double x) {
-        return Math.atan2(y, x);
+    public float atan2(float y, float x) {
+        return Helper.atan2(y, x);
     }
 
-    public double cos(double angle) {
-        return Math.cos(angle);
+    public float cos(float angle) {
+        return Helper.cos(angle);
     }
 
-    public double sin(double angle) {
-        return Math.sin(angle);
+    public float sin(float angle) {
+        return Helper.sin(angle);
     }
 
-    public double tan(double angle) {
-        return Math.tan(angle);
+    public float tan(float angle) {
+        return Helper.tan(angle);
     }
 
-    public double degrees(double radians) {
-        return Math.toDegrees(radians);
+    public float degrees(float radians) {
+        return (float) Math.toDegrees(radians);
     }
 
-    public double radians(double degrees) {
-        return Math.toRadians(degrees);
+    public float radians(float degrees) {
+        return (float) Math.toRadians(degrees);
     }
 
     // Random Functions
-    public double random(double high) {
-        return Math.random() * high;
+    public float random(float high) {
+        return Helper.random(high);
     }
 
-    public double random(double low, double high) {
-        return low + Math.random() * (high - low);
+    public float random(float low, float high) {
+        return Helper.random(low, high);
     }
 
-    public double random() {
-        return Math.random();
+    public float random() {
+        return Helper.random();
     }
 
-    public double randomGaussian() {
-        return new Random().nextGaussian();
+    public float randomGaussian() {
+        return (float) (new Random().nextGaussian());
     }
 
-    public double noise(double x, double y, double z, double w) {
+    public float noise(float x, float y, float z, float w) {
         return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset, z + noiseZOffset, w + noiseWOffset);
     }
 
-    public double noise(double x, double y, double z) {
+    public float noise(float x, float y, float z) {
         return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset, z + noiseZOffset);
     }
 
-    public double noise(double x, double y) {
+    public float noise(float x, float y) {
         return Helper.perlinNoise(x + noiseXOffset, y + noiseYOffset);
     }
 
-    public double noise(double x) {
+    public float noise(float x) {
         return noise(x + noiseXOffset, 0);
     }
 
     // Color
-    public Color color(double gray, double alpha) {
+    public Color color(float gray, float alpha) {
         int g = (int) Helper.constrain(gray, 0, 255);
         int a = (int) Helper.constrain(alpha, 0, 255);
         return new Color(g, g, g, a);
     }
 
-    public Color color(double gray) {
+    public Color color(float gray) {
         return color(gray, 255);
     }
 
-    public Color color(double red, double green, double blue, double alpha) {
+    public Color color(float red, float green, float blue, float alpha) {
         int r = (int) Helper.constrain(red, 0, 255);
         int g = (int) Helper.constrain(green, 0, 255);
         int b = (int) Helper.constrain(blue, 0, 255);
@@ -1378,7 +1341,7 @@ public class Applet extends JPanel {
         return new Color(r, g, b, a);
     }
 
-    public Color color(double red, double green, double blue) {
+    public Color color(float red, float green, float blue) {
         return color(red, green, blue, 255);
     }
 
@@ -1398,11 +1361,11 @@ public class Applet extends JPanel {
         return color.getRed();
     }
 
-    public double brightness(Color color) {
+    public float brightness(Color color) {
         return (color.getRed() + color.getGreen() + color.getBlue()) / 3;
     }
 
-    public Color lerpColor(Color c1, Color c2, double amt) {
+    public Color lerpColor(Color c1, Color c2, float amt) {
         return new Color(
                 (int) Helper.lerp(c1.getRed(), c2.getRed(), amt),
                 (int) Helper.lerp(c1.getGreen(), c2.getGreen(), amt),
@@ -1410,7 +1373,7 @@ public class Applet extends JPanel {
                 (int) Helper.lerp(c1.getAlpha(), c2.getAlpha(), amt));
     }
 
-    public double saturation(Color color) {
+    public float saturation(Color color) {
         float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
         return hsb[1];
     }
