@@ -127,16 +127,33 @@ public class Helper {
     }
 
     /**
-     * Prints a given {@code Object[]} with spaces in between each element. Prints a
-     * new line at the end.
+     * Prints every {@code Object} argument given with a space in between.
+     * 
+     * @param args
+     */
+    public static void print(Object... args) {
+        for (Object arg : args) {
+            System.out.print(arg + " ");
+        }
+    }
+
+    /**
+     * Prints a given {@code Object[]}. <br>
+     * <br>
+     * Example: <br>
+     * <br>
+     * [0] 0.3 <br>
+     * <br>
+     * [1] 0.4 <br>
+     * <br>
+     * [2] 0.5 <br>
      * 
      * @param args
      */
     public static void printArray(Object[] args) {
-        for (Object arg : args) {
-            System.out.print(arg + " ");
+        for (int i = 0; i < args.length; i++) {
+            System.out.println("[" + i + "] " + args[i]);
         }
-        System.out.println();
     }
 
     /**

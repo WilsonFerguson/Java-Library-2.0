@@ -17,6 +17,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import java.util.Arrays;
+import java.lang.reflect.Array;
+
 public class Applet extends JPanel {
 
     private JFrame frame;
@@ -349,6 +352,14 @@ public class Applet extends JPanel {
 
     public void println(Object... args) {
         Helper.println(args);
+    }
+
+    public void print(Object... args) {
+        Helper.print(args);
+    }
+
+    public void printArray(Object[] array) {
+        Helper.printArray(array);
     }
 
     public void background(Color color) {
@@ -1024,10 +1035,578 @@ public class Applet extends JPanel {
         System.exit(0);
     }
 
+    // Noise
+    public void noiseSeed(int seed) {
+        noiseXOffset = seed;
+        noiseYOffset = seed;
+        noiseZOffset = seed;
+        noiseWOffset = seed;
+    }
+
     // ------------------------------------------------------------
     // ------------------------------------------------------------
     // ------------------------------------------------------------
     // PROCESSING FUNCTIONS
+
+    public void append(byte[] array, byte value) {
+        byte[] newArray = new byte[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    public void append(char[] array, char value) {
+        char[] newArray = new char[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    // Array functions
+    public void append(int[] array, int value) {
+        int[] newArray = new int[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    public void append(float[] array, float value) {
+        float[] newArray = new float[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    public void append(String[] array, String value) {
+        String[] newArray = new String[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    public void append(Object[] array, Object value) {
+        Object[] newArray = new Object[array.length + 1];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        newArray[array.length] = value;
+        array = newArray;
+    }
+
+    public void arrayCopy(Object src, int srcPos, Object dest, int destPos,
+            int length) {
+        System.arraycopy(src, srcPos, dest, destPos, length);
+    }
+
+    public void arrayCopy(Object src, Object dest, int length) {
+        System.arraycopy(src, 0, dest, 0, length);
+    }
+
+    public void arrayCopy(Object src, Object dest) {
+        System.arraycopy(src, 0, dest, 0, Array.getLength(src));
+    }
+
+    public boolean[] concat(boolean[] a, boolean[] b) {
+        boolean[] c = new boolean[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public byte[] concat(byte[] a, byte[] b) {
+        byte[] c = new byte[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public char[] concat(char[] a, char[] b) {
+        char[] c = new char[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public int[] concat(int[] a, int[] b) {
+        int[] c = new int[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public float[] concat(float[] a, float[] b) {
+        float[] c = new float[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public String[] concat(String[] a, String[] b) {
+        String[] c = new String[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public Object[] concat(Object[] a, Object[] b) {
+        Object[] c = new Object[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+
+    public boolean[] expand(boolean list[]) {
+        boolean temp[] = new boolean[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public boolean[] expand(boolean list[], int newSize) {
+        boolean temp[] = new boolean[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public byte[] expand(byte list[]) {
+        byte temp[] = new byte[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public byte[] expand(byte list[], int newSize) {
+        byte temp[] = new byte[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public char[] expand(char list[]) {
+        char temp[] = new char[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public char[] expand(char list[], int newSize) {
+        char temp[] = new char[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public int[] expand(int list[]) {
+        int temp[] = new int[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public int[] expand(int list[], int newSize) {
+        int temp[] = new int[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public long[] expand(long list[]) {
+        long temp[] = new long[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public long[] expand(long list[], int newSize) {
+        long temp[] = new long[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public float[] expand(float list[]) {
+        float temp[] = new float[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public float[] expand(float list[], int newSize) {
+        float temp[] = new float[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public double[] expand(double list[]) {
+        double temp[] = new double[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public double[] expand(double list[], int newSize) {
+        double temp[] = new double[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public String[] expand(String list[]) {
+        String temp[] = new String[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public String[] expand(String list[], int newSize) {
+        String temp[] = new String[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public Object[] expand(Object list[]) {
+        Object temp[] = new Object[list.length + 1];
+        System.arraycopy(list, 0, temp, 0, list.length);
+        return temp;
+    }
+
+    public Object[] expand(Object list[], int newSize) {
+        Object temp[] = new Object[newSize];
+        System.arraycopy(list, 0, temp, 0, Math.min(list.length, newSize));
+        return temp;
+    }
+
+    public boolean[] shorten(boolean list[]) {
+        boolean outgoing[] = new boolean[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public byte[] shorten(byte list[]) {
+        byte outgoing[] = new byte[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public char[] shorten(char list[]) {
+        char outgoing[] = new char[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public int[] shorten(int list[]) {
+        int outgoing[] = new int[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public long[] shorten(long list[]) {
+        long outgoing[] = new long[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public float[] shorten(float list[]) {
+        float outgoing[] = new float[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public double[] shorten(double list[]) {
+        double outgoing[] = new double[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public String[] shorten(String list[]) {
+        String outgoing[] = new String[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public Object[] shorten(Object list[]) {
+        Object outgoing[] = new Object[list.length - 1];
+        System.arraycopy(list, 0, outgoing, 0, list.length - 1);
+        return outgoing;
+    }
+
+    public boolean[] splice(boolean list[], boolean value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public byte[] splice(byte list[], byte value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public char[] splice(char list[], char value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public int[] splice(int list[], int value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public long[] splice(long list[], long value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public float[] splice(float list[], float value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public double[] splice(double list[], double value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public String[] splice(String list[], String value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public Object[] splice(Object list[], Object value, int index) {
+        list = expand(list);
+        System.arraycopy(list, index, list, index + 1, list.length - index - 1);
+        list[index] = value;
+        return list;
+    }
+
+    public boolean[] subset(boolean list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public byte[] subset(byte list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public char[] subset(char list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public int[] subset(int list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public long[] subset(long list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public float[] subset(float list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public double[] subset(double list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public String[] subset(String list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public Object[] subset(Object list[], int start) {
+        return subset(list, start, list.length);
+    }
+
+    public boolean[] subset(boolean list[], int start, int count) {
+        boolean outgoing[] = new boolean[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public byte[] subset(byte list[], int start, int count) {
+        byte outgoing[] = new byte[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public char[] subset(char list[], int start, int count) {
+        char outgoing[] = new char[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public int[] subset(int list[], int start, int count) {
+        int outgoing[] = new int[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public long[] subset(long list[], int start, int count) {
+        long outgoing[] = new long[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public float[] subset(float list[], int start, int count) {
+        float outgoing[] = new float[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public double[] subset(double list[], int start, int count) {
+        double outgoing[] = new double[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public String[] subset(String list[], int start, int count) {
+        String outgoing[] = new String[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public Object[] subset(Object list[], int start, int count) {
+        Object outgoing[] = new Object[count];
+        System.arraycopy(list, start, outgoing, 0, count);
+        return outgoing;
+    }
+
+    public boolean[] reverse(boolean list[]) {
+        boolean outgoing[] = new boolean[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public byte[] reverse(byte list[]) {
+        byte outgoing[] = new byte[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public char[] reverse(char list[]) {
+        char outgoing[] = new char[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public int[] reverse(int list[]) {
+        int outgoing[] = new int[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public long[] reverse(long list[]) {
+        long outgoing[] = new long[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public float[] reverse(float list[]) {
+        float outgoing[] = new float[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public double[] reverse(double list[]) {
+        double outgoing[] = new double[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public String[] reverse(String list[]) {
+        String outgoing[] = new String[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public Object[] reverse(Object list[]) {
+        Object outgoing[] = new Object[list.length];
+        for (int i = 0; i < list.length; i++) {
+            outgoing[i] = list[list.length - i - 1];
+        }
+        return outgoing;
+    }
+
+    public byte[] sort(byte list[]) {
+        byte outgoing[] = new byte[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public char[] sort(char list[]) {
+        char outgoing[] = new char[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public int[] sort(int list[]) {
+        int outgoing[] = new int[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public long[] sort(long list[]) {
+        long outgoing[] = new long[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public float[] sort(float list[]) {
+        float outgoing[] = new float[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public double[] sort(double list[]) {
+        double outgoing[] = new double[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public String[] sort(String list[]) {
+        String outgoing[] = new String[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
+
+    public Object[] sort(Object list[]) {
+        Object outgoing[] = new Object[list.length];
+        System.arraycopy(list, 0, outgoing, 0, list.length);
+        Arrays.sort(outgoing);
+        return outgoing;
+    }
 
     // Conversion Functions
     public String binary(int n) {
@@ -1126,7 +1705,7 @@ public class Applet extends JPanel {
         return result;
     }
 
-    // Ignoring matchAll and match (regex)
+    // match all/match
 
     // Ignoring nf, nfc, nfp, nfs, and splitTokens
 
@@ -1192,6 +1771,10 @@ public class Applet extends JPanel {
         return Helper.constrain(value, min, max);
     }
 
+    public float constrain(int value, int min, int max) {
+        return Helper.constrain(value, min, max);
+    }
+
     public float dist(float x1, float y1, float x2, float y2) {
         return Point.dist(x1, y1, x2, y2);
     }
@@ -1220,6 +1803,10 @@ public class Applet extends JPanel {
         return (float) Math.sqrt(a * a + b * b);
     }
 
+    public float mag(float a, float b, float c) {
+        return (float) Math.sqrt(a * a + b * b + c * c);
+    }
+
     public float map(float value, float min1, float max1, float min2, float max2) {
         return Helper.map(value, min1, max1, min2, max2);
     }
@@ -1228,8 +1815,32 @@ public class Applet extends JPanel {
         return Math.max(n1, n2);
     }
 
+    public int max(int n1, int n2) {
+        return Math.max(n1, n2);
+    }
+
+    public float max(float n1, float n2, float n3) {
+        return Math.max(n1, Math.max(n2, n3));
+    }
+
+    public int max(int n1, int n2, int n3) {
+        return Math.max(n1, Math.max(n2, n3));
+    }
+
     public float min(float n1, float n2) {
         return Math.min(n1, n2);
+    }
+
+    public int min(int n1, int n2) {
+        return Math.min(n1, n2);
+    }
+
+    public float min(float n1, float n2, float n3) {
+        return Math.min(n1, Math.min(n2, n3));
+    }
+
+    public int min(int n1, int n2, int n3) {
+        return Math.min(n1, Math.min(n2, n3));
     }
 
     public float norm(float value, float min, float max) {
@@ -1279,6 +1890,30 @@ public class Applet extends JPanel {
 
     public float tan(float angle) {
         return Helper.tan(angle);
+    }
+
+    public float csc(float angle) {
+        return 1 / Helper.sin(angle);
+    }
+
+    public float sec(float angle) {
+        return 1 / Helper.cos(angle);
+    }
+
+    public float cot(float angle) {
+        return 1 / Helper.tan(angle);
+    }
+
+    public float acsc(float n) {
+        return 1 / asin(n);
+    }
+
+    public float asec(float n) {
+        return 1 / acos(n);
+    }
+
+    public float acot(float n) {
+        return 1 / atan(n);
     }
 
     public float degrees(float radians) {
@@ -1376,6 +2011,11 @@ public class Applet extends JPanel {
     public float saturation(Color color) {
         float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
         return hsb[1];
+    }
+
+    public float hue(Color color) {
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        return hsb[0];
     }
 
     /**
